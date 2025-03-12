@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import logo from '@/assets/imgs/logo.png'
-import Button from '@/components/Button'
+import Button from '@/pages/_components/Button'
 
 type FormData = {
   email: string
@@ -90,7 +90,7 @@ export default function Signup() {
             회원가입하기
           </Button>
         </form>
-        <div className="text-md mt-20 flex items-center justify-center gap-4">
+        <div className="text-md mt-10 flex items-center justify-center gap-4">
           <p>이미 회원이신가요?</p>
           <Link
             href="/login"

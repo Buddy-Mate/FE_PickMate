@@ -64,7 +64,7 @@ export default function Login() {
             로그인하기
           </Button>
         </form>
-        <div className="text-md mt-20 flex items-center justify-center gap-4">
+        <div className="text-md mt-10 flex items-center justify-center gap-4">
           <p>회원이 아니신가요?</p>
           <Link
             href="/signup"
