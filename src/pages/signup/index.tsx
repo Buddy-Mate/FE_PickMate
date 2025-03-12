@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import logo from '@/assets/imgs/logo.png'
+import logo from '@/_assets/imgs/logo.png'
 import Button from '@/pages/_components/Button'
 
 type FormData = {
