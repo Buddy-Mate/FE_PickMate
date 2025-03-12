@@ -1,11 +1,9 @@
 export default function SearchBar() {
   return (
-    <div className="mb-4">
-      <input
-        type="text"
-        placeholder="프로젝트를 검색하세요"
-        className="w-full rounded border border-gray-300 bg-gray-100 p-3"
-      />
-    </div>
+    <input
+      type="text"
+      placeholder="프로젝트를 검색하세요"
+      className="w-full max-w-50 rounded-lg border border-gray-300 bg-transparent px-4 py-2 focus:outline-none md:max-w-80"
+    />
   )
 }
