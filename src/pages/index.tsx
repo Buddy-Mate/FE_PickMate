@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import logo from '@/assets/imgs/logo.png'
-import image1 from '@/assets/imgs/landing/image1.png'
-import image2 from '@/assets/imgs/landing/image2.png'
-import image3 from '@/assets/imgs/landing/image3.png'
+import logo from '@/_assets/imgs/logo.png'
+import image1 from '@/_assets/imgs/landing/image1.png'
+import image2 from '@/_assets/imgs/landing/image2.png'
+import image3 from '@/_assets/imgs/landing/image3.png'
 import { useRouter } from 'next/router'
 import Button from './_components/Button'
 
