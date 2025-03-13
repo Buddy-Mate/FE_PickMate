@@ -12,7 +12,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <div className="flex min-h-screen flex-col">
       {!hideLayout && <Header />}
-      <main className="mt-30 flex-1">
+      <main className="mt-20 flex-1">
         <Component {...pageProps} />
       </main>
       {!hideLayout && <Footer />}
