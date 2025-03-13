@@ -31,7 +31,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b px-4 text-center">
+    <div className="flex max-h-screen flex-col items-center justify-center px-4 py-10">
       <Link href={'/'}>
         <Image src={logo} alt="로고" width={400} height={300} priority />
       </Link>
