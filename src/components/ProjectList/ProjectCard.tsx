@@ -35,7 +35,7 @@ export default function ProjectCard({
 
   return (
     <Link href={`/project/${id}`}>
-      <div className="bg-custom-gray-300 border-custom-gray-100 rounded-lg border p-4 shadow-md">
+      <div className="bg-custom-gray-300 border-custom-gray-100 rounded-lg border p-4 shadow-md transition-all hover:scale-105">
         <h3 className="text-lg font-bold">{title}</h3>
         <ul className="my-4 flex gap-2">
           {techStack.map((tech, index) => (
