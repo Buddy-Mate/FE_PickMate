@@ -17,16 +17,7 @@ export default function ProjectList({ currentPage }: ProjectListProps) {
   return (
     <div className="mb-20 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {paginatedProjects.map((project, index) => (
-        <ProjectCard
-          key={index}
-          id={project.id}
-          title={project.title}
-          techStack={project.techStack}
-          authorProfile={project.authorProfile}
-          authorNickname={project.authorNickname}
-          likes={project.likes}
-          views={project.views}
-        />
+        <ProjectCard key={index} project={project} />
       ))}
     </div>
   )

@@ -5,25 +5,14 @@ import heartFill from '@/assets/icons/heartFill.png'
 import eyeVisible from '@/assets/icons/eyeVisible.png'
 import { useState } from 'react'
 import Link from 'next/link'
+import { Project } from '@/types/project'
 
 type ProjectCardProps = {
-  id: number
-  title: string
-  techStack: string[]
-  authorProfile: string
-  authorNickname: string
-  likes: number
-  views: number
+  project: Project
 }
 
-export default function ProjectCard({
-  id,
-  title,
-  techStack,
-  authorNickname,
-  likes,
-  views,
-}: ProjectCardProps) {
+export default function ProjectCard({ project }: ProjectCardProps) {
+  const { id, title, techStack, authorNickname, likes, views } = project
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(likes)
 
