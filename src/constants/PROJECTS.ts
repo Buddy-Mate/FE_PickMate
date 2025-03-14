@@ -1,7 +1,8 @@
 export const PROJECTS = [
   {
     id: 1,
-    title: '프로젝트 A',
+    title:
+      '프로젝트 A프로젝트 A프로젝트 A프로젝트 A프로젝트 A프로젝트 A프로젝트 A프로젝트 A프로젝트 A',
     techStack: ['React', 'Node.js', 'MongoDB'],
     authorProfile: '/path/to/profile1.png',
     authorNickname: '작성자1',
@@ -10,7 +11,8 @@ export const PROJECTS = [
   },
   {
     id: 2,
-    title: '프로젝트 B',
+    title:
+      '프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B프로젝트 B',
     techStack: ['Vue.js', 'Express', 'MySQL'],
     authorProfile: '/path/to/profile2.png',
     authorNickname: '작성자2',
@@ -20,7 +22,14 @@ export const PROJECTS = [
   {
     id: 3,
     title: '프로젝트 C',
-    techStack: ['Angular', 'Django', 'PostgreSQL'],
+    techStack: [
+      'Angular',
+      'Django',
+      'PostgreSQL',
+      'Vue.js',
+      'Express',
+      'MySQL',
+    ],
     authorProfile: '/path/to/profile3.png',
     authorNickname: '작성자3',
     likes: 60,

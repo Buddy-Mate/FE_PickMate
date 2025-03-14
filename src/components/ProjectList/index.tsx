@@ -15,7 +15,7 @@ export default function ProjectList({ currentPage }: ProjectListProps) {
   )
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="mb-20 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {paginatedProjects.map((project, index) => (
         <ProjectCard
           key={index}

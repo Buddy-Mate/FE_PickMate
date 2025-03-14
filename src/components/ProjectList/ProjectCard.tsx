@@ -20,7 +20,6 @@ export default function ProjectCard({
   id,
   title,
   techStack,
-  // authorProfile,
   authorNickname,
   likes,
   views,
@@ -35,9 +34,12 @@ export default function ProjectCard({
 
   return (
     <Link href={`/project/${id}`}>
-      <div className="bg-custom-gray-300 border-custom-gray-100 rounded-lg border p-4 shadow-md transition-all hover:scale-105">
-        <h3 className="text-lg font-bold">{title}</h3>
-        <ul className="my-4 flex gap-2">
+      <div className="bg-custom-gray-300 border-custom-gray-100 flex h-60 flex-col justify-between rounded-lg border p-4 shadow-md transition-all hover:scale-105">
+        {/* 제목 */}
+        <h3 className="line-clamp-3 text-lg font-bold">{title}</h3>
+
+        {/* 기술 스택 */}
+        <ul className="my-2 flex flex-wrap gap-2">
           {techStack.map((tech, index) => (
             <li
               key={index}
@@ -47,8 +49,10 @@ export default function ProjectCard({
             </li>
           ))}
         </ul>
+
         <div className="flex items-center justify-between">
-          <div className="flex items-center justify-start gap-2">
+          {/* 프로필 */}
+          <div className="flex items-center gap-2">
             <Image
               src={profile}
               alt={authorNickname}
@@ -59,11 +63,9 @@ export default function ProjectCard({
             <p className="text-gray-500">{authorNickname}</p>
           </div>
 
+          {/* 좋아요 & 조회수 */}
           <div className="flex items-center gap-4 text-sm text-gray-500">
-            <button
-              onClick={toggleLike}
-              className="flex cursor-pointer items-center gap-1"
-            >
+            <button onClick={toggleLike} className="flex items-center gap-1">
               <Image
                 src={liked ? heartFill : heartEmpty}
                 alt="좋아요"
@@ -71,7 +73,7 @@ export default function ProjectCard({
               />
               <span>{likeCount}</span>
             </button>
-            <div className="flex items-center justify-center gap-1">
+            <div className="flex items-center gap-1">
               <Image src={eyeVisible} alt="조회수 아이콘" className="size-5" />
               <span>{views}</span>
             </div>
