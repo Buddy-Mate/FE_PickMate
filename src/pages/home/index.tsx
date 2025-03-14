@@ -1,9 +1,13 @@
 import Banner from '@/components/Banner'
 import Dropdown from '@/components/Dropdown'
+import Pagination from '@/components/Pagination'
 import ProjectList from '@/components/ProjectList'
 import SearchBar from '@/components/SearchBar'
+import { useState } from 'react'
 
 export default function Home() {
+  const [currentPage, setCurrentPage] = useState(1)
+
   return (
     <div>
       <Banner />
@@ -12,7 +16,8 @@ export default function Home() {
           <Dropdown />
           <SearchBar />
         </div>
-        <ProjectList />
+        <ProjectList currentPage={currentPage} />
+        <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} />
       </div>
     </div>
   )
