@@ -1,4 +1,4 @@
-import Banner from '@/components/Banner'
+import ProjectBanner from '@/components/Banner/ProjectBanner'
 import Dropdown from '@/components/Dropdown'
 import Pagination from '@/components/Pagination'
 import ProjectList from '@/components/ProjectList'
@@ -11,9 +11,9 @@ export default function Home() {
   const itemsPerPage = 6
   const totalPages = Math.ceil(PROJECTS.length / itemsPerPage)
 
-  https: return (
+  return (
     <div>
-      <Banner />
+      <ProjectBanner />
       <div className="mx-auto w-full max-w-[1200px] px-10 py-10">
         <div className="flex items-center justify-start gap-4 py-10">
           <Dropdown />
