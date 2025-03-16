@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import logo from '@/assets/imgs/logo.png'
 import Button from '@/components/Button'
+import { signup } from '@/libs/apis/auth'
 
 type FormData = {
   email: string
@@ -27,9 +28,16 @@ export default function Signup() {
   const router = useRouter()
 
   const onSubmit = async (data: FormData) => {
-    console.log('회원가입 성공', data)
-    alert('회원가입 성공!')
-    router.push('/login')
+    try {
+      const { email, nickname, password } = data
+      await signup({ email, nickname, password })
+
+      alert('회원가입 성공!')
+      router.push('/login')
+    } catch (error) {
+      alert('회원가입에 실패했습니다.')
+      console.error('회원가입 에러:', error)
+    }
   }
   return (
     <div className="flex max-h-screen flex-col items-center justify-center px-4 py-10">

@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import logo from '@/assets/imgs/logo.png'
 import Button from '@/components/Button'
+import { login } from '@/libs/apis/auth'
+import { setCookie } from 'cookies-next'
 
 type FormData = {
   email: string
@@ -25,9 +27,18 @@ export default function Login() {
   const router = useRouter()
 
   const onSubmit = async (data: FormData) => {
-    console.log('로그인 성공', data)
-    alert('로그인 성공!')
-    router.push('/home')
+    try {
+      const res = await login(data)
+
+      const { accessToken } = res
+      setCookie('accessToken', accessToken)
+
+      alert('로그인 성공!')
+      router.push('/home')
+    } catch (error) {
+      alert('로그인에 실패했습니다.')
+      console.error('로그인 에러:', error)
+    }
   }
 
   return (
