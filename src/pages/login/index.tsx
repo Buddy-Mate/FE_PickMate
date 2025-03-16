@@ -8,6 +8,7 @@ import logo from '@/assets/imgs/logo.png'
 import Button from '@/components/Button'
 import { login } from '@/libs/apis/auth'
 import { setCookie } from 'cookies-next'
+import { useAuthStore } from '@/store/authStore'
 
 type FormData = {
   email: string
@@ -25,13 +26,19 @@ export default function Login() {
   })
 
   const router = useRouter()
+  const { login: setLogin } = useAuthStore()
 
   const onSubmit = async (data: FormData) => {
     try {
       const res = await login(data)
 
-      const { accessToken } = res
-      setCookie('accessToken', accessToken)
+      const { token } = res
+      setCookie('accessToken', token, {
+        path: '/',
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+      })
+      setLogin(token)
 
       alert('로그인 성공!')
       router.push('/home')
