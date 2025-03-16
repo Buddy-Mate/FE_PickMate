@@ -17,7 +17,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     // 로그인 상태가 아니면 로그인 페이지로 리디렉션
-    if (!isLoggedIn && !['/login', '/signup'].includes(router.pathname)) {
+    if (!isLoggedIn && !hideLayout) {
       alert('로그인이 필요합니다!')
       router.push('/login')
     }
