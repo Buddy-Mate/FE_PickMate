@@ -9,6 +9,8 @@ import Button from '@/components/Button'
 import { login } from '@/libs/apis/auth'
 import { setCookie } from 'cookies-next'
 import { useAuthStore } from '@/store/authStore'
+import { useState } from 'react'
+import Loading from '@/components/Loading'
 
 type FormData = {
   email: string
@@ -27,8 +29,10 @@ export default function Login() {
 
   const router = useRouter()
   const { login: setLogin } = useAuthStore()
+  const [isLoading, setIsLoading] = useState(false)
 
   const onSubmit = async (data: FormData) => {
+    setIsLoading(true)
     try {
       const res = await login(data)
 
@@ -45,8 +49,12 @@ export default function Login() {
     } catch (error) {
       alert('로그인에 실패했습니다.')
       console.error('로그인 에러:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
+
+  if (isLoading) return <Loading />
 
   return (
     <div className="flex max-h-screen flex-col items-center justify-center px-4 py-10">
