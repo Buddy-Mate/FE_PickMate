@@ -16,6 +16,12 @@ export default function App({ Component, pageProps }: AppProps) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // 랜딩페이지('/')는 로그인 여부와 상관없이 접근 가능
+    if (router.pathname === '/') {
+      setLoading(false)
+      return
+    }
+
     // 로그인 상태가 아니면 로그인 페이지로 리디렉션
     if (!isLoggedIn && !hideLayout) {
       alert('로그인이 필요합니다!')
@@ -31,7 +37,7 @@ export default function App({ Component, pageProps }: AppProps) {
     } else {
       setLoading(false)
     }
-  }, [isLoggedIn, router, router.pathname])
+  }, [hideLayout, isLoggedIn, router, router.pathname])
 
   if (loading) return <Loading />
 
