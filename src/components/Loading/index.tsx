@@ -9,8 +9,8 @@ export default function Loading() {
         animationData={loadingAnimation}
         loop={true}
         autoplay={true}
-        height={200}
-        width={200}
+        height={300}
+        width={300}
       />
     </div>
   )
