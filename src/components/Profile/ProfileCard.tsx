@@ -9,7 +9,11 @@ type ProfileCardProps = {
   bio: string
 }
 
-export default function Profile({ nickname, email, bio }: ProfileCardProps) {
+export default function ProfileCard({
+  nickname,
+  email,
+  bio,
+}: ProfileCardProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [nicknameInput, setNicknameInput] = useState(nickname)
   const [bioInput, setBioInput] = useState(bio)
