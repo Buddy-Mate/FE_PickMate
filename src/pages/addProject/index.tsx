@@ -8,6 +8,7 @@ import remove from '@/assets/icons/remove.png'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import '@/styles/customDatePicker.css'
+import { useRouter } from 'next/router'
 
 type FormData = {
   title: string
@@ -31,6 +32,8 @@ export default function AddProject() {
   const [stacks, setStacks] = useState<string[]>([])
   const [stackTag, setStackTag] = useState('')
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+
+  const router = useRouter()
 
   const handleTagInput = (e: ChangeEvent<HTMLInputElement>) => {
     setStackTag(e.target.value)
@@ -74,7 +77,7 @@ export default function AddProject() {
       <h1 className="my-4 text-3xl font-bold">프로젝트 등록</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         <div className="flex flex-col gap-2">
-          <label className="text-xl font-semibold">제목</label>
+          <label className="text-xl font-semibold">📌 제목</label>
           <input
             type="text"
             {...register('title')}
@@ -86,7 +89,7 @@ export default function AddProject() {
           )}
         </div>
         <div className="flex flex-col gap-2">
-          <label className="text-xl font-semibold">내용</label>
+          <label className="text-xl font-semibold">📝 내용</label>
           <textarea
             {...register('description')}
             placeholder="어떤 개발자를 모집하고 싶은지, 구현하고 싶은 기능이나 목표 등을 작성해주세요"
@@ -97,7 +100,7 @@ export default function AddProject() {
           )}
         </div>
         <div className="flex flex-col gap-2">
-          <label className="text-xl font-semibold">기술 스택</label>
+          <label className="text-xl font-semibold">⚒️ 기술 스택</label>
           <input
             type="text"
             value={stackTag}
@@ -132,7 +135,7 @@ export default function AddProject() {
           )}
         </div>
         <div className="flex flex-col gap-2">
-          <label className="text-xl font-semibold">마감일</label>
+          <label className="text-xl font-semibold">📅 마감일</label>
           <DatePicker
             selected={selectedDate}
             onChange={(date) => {
@@ -149,7 +152,11 @@ export default function AddProject() {
           )}
         </div>
         <div className="flex items-center justify-center gap-4">
-          <Button type="secondary" className="max-w-30">
+          <Button
+            type="secondary"
+            className="max-w-30"
+            onClick={() => router.back()}
+          >
             취소하기
           </Button>
           <Button type="primary" className="max-w-30">
