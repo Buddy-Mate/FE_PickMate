@@ -1,12 +1,15 @@
 import Button from '@/components/Button'
 import { projectSchema } from '@/utils/projectSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
+import Image from 'next/image'
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import remove from '@/assets/icons/remove.png'
 
 type FormData = {
   title: string
   description: string
-  techStack: string
+  stack: string[]
   deadline: string
 }
 
@@ -14,11 +17,39 @@ export default function AddProject() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(projectSchema),
     mode: 'all',
   })
+
+  const [stacks, setStacks] = useState<string[]>([])
+  const [stackTag, setStackTag] = useState('')
+
+  const handleTagInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setStackTag(e.target.value)
+  }
+
+  const inputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && stackTag) {
+      if (!stacks.includes(stackTag)) {
+        setStacks([...stacks, stackTag])
+      }
+      setStackTag('')
+      e.preventDefault()
+    }
+  }
+
+  const removeTag = (removeTagIndex: number) => {
+    const newstacks = stacks.filter((_, index) => index !== removeTagIndex)
+    setStacks(newstacks)
+  }
+
+  // stacks 배열이 바뀔 때마다 react-hook-form에 주입
+  useEffect(() => {
+    setValue('stack', stacks)
+  }, [stacks, setValue])
 
   const onSubmit = (data: FormData) => {
     console.log(data)
@@ -53,12 +84,30 @@ export default function AddProject() {
           <label className="text-xl font-semibold">기술 스택</label>
           <input
             type="text"
-            {...register('techStack')}
-            placeholder="ex) React, TypeScript"
+            value={stackTag}
+            onChange={handleTagInput}
+            onKeyDown={inputKeyDown}
+            placeholder="태그를 입력해주세요 (엔터를 누르면 태그가 적용돼요)"
             className="text-custom-white focus:border-custom-white border-custom-gray-200 rounded-lg border-2 bg-transparent px-4 py-3 outline-none"
           />
-          {errors.techStack && (
-            <p className="text-custom-red">{errors.techStack.message}</p>
+          <div className="flex gap-2">
+            {stacks.map((stack, index) => (
+              <div
+                key={index}
+                className="bg-primary text-custom-white flex items-center gap-1 rounded-full px-4 py-2"
+              >
+                {stack}
+                <Image
+                  src={remove}
+                  onClick={() => removeTag(index)}
+                  className="h-5 w-5 cursor-pointer"
+                  alt="Remove tag"
+                />
+              </div>
+            ))}
+          </div>
+          {errors.stack && (
+            <p className="text-custom-red">{errors.stack.message}</p>
           )}
         </div>
         <div className="flex flex-col gap-2">
