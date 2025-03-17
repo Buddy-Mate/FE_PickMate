@@ -1,31 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import Image from 'next/image'
+import Profile from '@/components/Profile'
 import React, { useState } from 'react'
-import profile from '@/assets/icons/profile.png'
 
 export default function My() {
   const [bio, setBio] = useState('')
+  const nickname = 'example'
+  const email = 'email@example.com'
 
   return (
     <div className="mx-auto w-full max-w-[1200px] px-10 py-10">
       {/* 프로필 */}
-      <h1>내 정보</h1>
-      <div className="border-custom-gray-200 mb-10 flex items-center justify-center gap-10 rounded-lg border-2 p-10">
-        <Image
-          src={profile}
-          alt="프로필 이미지"
-          className="h-24 w-24 rounded-full object-cover"
-        />
-        <div>
-          <h2 className="text-2xl font-semibold">닉네임</h2>
-          <p className="text-gray-600">email@example.com</p>
-          <p className="mt-2 text-gray-500">{bio ? bio : '한 줄 소개'}</p>
-        </div>
-      </div>
+      <h1 className="my-4 text-3xl font-bold">{nickname}님의 정보</h1>
+      <Profile nickname={nickname} email={email} bio={bio} />
 
       {/* 내가 쓴 게시글 */}
       <div>
-        <h2 className="mb-4 text-xl font-bold">내가 쓴 게시글</h2>
+        <h2 className="my-4 text-2xl font-semibold">📄 내가 등록한</h2>
         <div className="flex space-x-4">
           {/* 프로젝트 탭 */}
           <div className="bg-custom-gray-300 w-1/2 space-y-4 rounded-xl p-4 shadow">
@@ -61,7 +51,7 @@ export default function My() {
 
       {/* 내가 신청한 목록 */}
       <div>
-        <h3 className="mb-4 text-xl font-bold">내가 신청한 목록</h3>
+        <h3 className="my-4 text-2xl font-semibold">🤝 내가 신청한</h3>
         <div className="flex space-x-4">
           {/* 프로젝트 탭 */}
           <div className="bg-custom-gray-300 w-1/2 space-y-4 rounded-xl p-4 shadow">
