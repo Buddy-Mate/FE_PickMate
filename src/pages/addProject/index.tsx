@@ -64,6 +64,7 @@ export default function AddProject() {
           <input
             type="text"
             {...register('title')}
+            placeholder="제목을 입력하세요"
             className="text-custom-white focus:border-custom-white border-custom-gray-200 rounded-lg border-2 bg-transparent px-4 py-3 outline-none"
           />
           {errors.title && (
@@ -74,6 +75,7 @@ export default function AddProject() {
           <label className="text-xl font-semibold">내용</label>
           <textarea
             {...register('description')}
+            placeholder="어떤 개발자를 모집하고 싶은지, 구현하고 싶은 기능이나 목표 등을 작성해주세요"
             className="text-custom-white focus:border-custom-white border-custom-gray-200 h-100 resize-none rounded-lg border-2 bg-transparent px-4 py-3 outline-none"
           />
           {errors.description && (
@@ -87,10 +89,10 @@ export default function AddProject() {
             value={stackTag}
             onChange={handleTagInput}
             onKeyDown={inputKeyDown}
-            placeholder="태그를 입력해주세요 (엔터를 누르면 태그가 적용돼요)"
+            placeholder="태그를 입력하세요 (엔터를 누르면 태그가 적용돼요, 최대 8개)"
             className="text-custom-white focus:border-custom-white border-custom-gray-200 rounded-lg border-2 bg-transparent px-4 py-3 outline-none"
           />
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {stacks.map((stack, index) => (
               <div
                 key={index}
@@ -106,6 +108,11 @@ export default function AddProject() {
               </div>
             ))}
           </div>
+          {stacks.length > 8 && (
+            <p className="text-custom-red">
+              기술 스택은 최대 8개까지 입력할 수 있습니다
+            </p>
+          )}
           {errors.stack && (
             <p className="text-custom-red">{errors.stack.message}</p>
           )}
