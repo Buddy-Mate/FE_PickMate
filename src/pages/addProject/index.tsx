@@ -5,6 +5,9 @@ import Image from 'next/image'
 import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import remove from '@/assets/icons/remove.png'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import '@/styles/customDatePicker.css'
 
 type FormData = {
   title: string
@@ -18,6 +21,7 @@ export default function AddProject() {
     register,
     handleSubmit,
     setValue,
+    clearErrors,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(projectSchema),
@@ -26,6 +30,7 @@ export default function AddProject() {
 
   const [stacks, setStacks] = useState<string[]>([])
   const [stackTag, setStackTag] = useState('')
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
 
   const handleTagInput = (e: ChangeEvent<HTMLInputElement>) => {
     setStackTag(e.target.value)
@@ -42,14 +47,23 @@ export default function AddProject() {
   }
 
   const removeTag = (removeTagIndex: number) => {
-    const newstacks = stacks.filter((_, index) => index !== removeTagIndex)
-    setStacks(newstacks)
+    const newStacks = stacks.filter((_, index) => index !== removeTagIndex)
+    setStacks(newStacks)
   }
 
   // stacks 배열이 바뀔 때마다 react-hook-form에 주입
   useEffect(() => {
     setValue('stack', stacks)
   }, [stacks, setValue])
+
+  useEffect(() => {
+    if (selectedDate) {
+      const formattedDate = selectedDate.toISOString().split('T')[0]
+      setValue('deadline', formattedDate)
+    } else {
+      setValue('deadline', '')
+    }
+  }, [selectedDate, setValue])
 
   const onSubmit = (data: FormData) => {
     console.log(data)
@@ -119,10 +133,16 @@ export default function AddProject() {
         </div>
         <div className="flex flex-col gap-2">
           <label className="text-xl font-semibold">마감일</label>
-          <input
-            type="date"
-            {...register('deadline')}
-            className="text-custom-white focus:border-custom-white border-custom-gray-200 rounded-lg border-2 bg-transparent px-4 py-3 outline-none"
+          <DatePicker
+            selected={selectedDate}
+            onChange={(date) => {
+              setSelectedDate(date)
+              clearErrors('deadline')
+            }}
+            minDate={new Date()}
+            className="text-custom-white focus:border-custom-white border-custom-gray-200 w-full cursor-pointer rounded-lg border-2 bg-transparent px-4 py-3 outline-none"
+            placeholderText="날짜를 선택하세요"
+            dateFormat="yyyy-MM-dd"
           />
           {errors.deadline && (
             <p className="text-custom-red">{errors.deadline.message}</p>
