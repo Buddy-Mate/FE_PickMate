@@ -2,6 +2,9 @@ import Image from 'next/image'
 import { useState } from 'react'
 import profile from '@/assets/icons/profile.png'
 import Button from '../Button'
+import { useRouter } from 'next/navigation'
+import { deleteCookie } from 'cookies-next'
+import { useAuthStore } from '@/store/authStore'
 
 type ProfileCardProps = {
   nickname: string
@@ -18,11 +21,20 @@ export default function ProfileCard({
   const [nicknameInput, setNicknameInput] = useState(nickname)
   const [bioInput, setBioInput] = useState(bio)
 
+  const router = useRouter()
+
   // 취소 버튼
   const handleCancel = () => {
     setNicknameInput(nickname)
     setBioInput(bio)
     setIsEditing(false)
+  }
+
+  // 로그아웃
+  const handleLogOut = () => {
+    deleteCookie('accessToken')
+    useAuthStore.getState().logout()
+    router.push('/login')
   }
 
   // TODO: API 연결
@@ -77,9 +89,14 @@ export default function ProfileCard({
             <p className="mt-2 text-gray-500">
               ✍️ {bioInput ? bioInput : '한 줄 소개가 없습니다.'}
             </p>
-            <Button type="tertiary" onClick={() => setIsEditing(true)}>
-              프로필 편집
-            </Button>
+            <div className="flex gap-4">
+              <Button type="secondary" onClick={() => setIsEditing(true)}>
+                프로필 편집
+              </Button>
+              <Button type="tertiary" onClick={handleLogOut}>
+                로그아웃
+              </Button>
+            </div>
           </>
         )}
       </div>

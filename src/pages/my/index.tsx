@@ -1,8 +1,32 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import ProfileCard from '@/components/Profile/ProfileCard'
 import Section from '@/components/Profile/Section'
+import { getUserData } from '@/libs/apis/auth'
+import { User } from '@/types/auth'
+import { getCookie } from 'cookies-next'
+import { GetServerSidePropsContext } from 'next'
 import React, { useState } from 'react'
 
+// export async function getServerSideProps(context: GetServerSidePropsContext) {
+//   const accessToken = getCookie('accessToken', {
+//     req: context.req,
+//     res: context.res,
+//   })
+
+//   const user = await getUserData(accessToken as string)
+
+//   return {
+//     props: {
+//       user: user || null,
+//     },
+//   }
+// }
+
+// type MyProps = {
+//   user: User | null
+// }
+
+// export default function My({ user }: MyProps) {
 export default function My() {
   const [bio, setBio] = useState('')
   const nickname = 'example'
