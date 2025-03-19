@@ -49,18 +49,18 @@ export default function ProjectCard({
         </div>
 
         {currentStatus === '대기중' && (
-          <div className="flex w-1/2 items-center justify-end gap-4">
+          <div className="flex w-1/2 flex-col items-end justify-end gap-4 md:flex-row md:items-center">
             <Button
               type="primary"
               onClick={handleAccept}
-              className="max-w-20 text-sm"
+              className="max-w-24 text-sm"
             >
               수락
             </Button>
             <Button
               type="tertiary"
               onClick={handleReject}
-              className="max-w-20 text-sm"
+              className="max-w-24 text-sm"
             >
               거절
             </Button>
