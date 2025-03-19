@@ -62,8 +62,10 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
   return (
     <div className="mx-auto w-full max-w-[1200px] px-6 py-10">
       <div className="mb-4 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white">{project.title}</h1>
+        <div className="min-w-0 flex-1">
+          <h1 className="truncate text-3xl font-bold text-white">
+            {project.title}
+          </h1>
         </div>
         <div className="flex items-center justify-between gap-1">
           <Image
