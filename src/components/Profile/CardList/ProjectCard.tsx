@@ -75,7 +75,7 @@ export default function ProjectCard({
           onClick={handleOutsideClick}
         >
           <div
-            className="bg-custom-black w-1/2 rounded-lg border-2 p-6"
+            className="bg-custom-black min-w-100 rounded-lg border-2 p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="mb-4 text-xl font-semibold">🖥️ 채팅방 주소 입력</h2>

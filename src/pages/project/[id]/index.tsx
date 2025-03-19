@@ -4,7 +4,7 @@ import { PROJECTS } from '@/constants/PROJECTS'
 import Image from 'next/image'
 import profile from '@/assets/icons/profile.png'
 import Button from '@/components/Button'
-import { useState } from 'react'
+import { MouseEvent, useState } from 'react'
 import heartEmpty from '@/assets/icons/heartEmpty.png'
 import heartFill from '@/assets/icons/heartFill.png'
 import eyeVisible from '@/assets/icons/eyeVisible.png'
@@ -37,9 +37,26 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(project.likes)
 
+  const [message, setMessage] = useState('')
+  const [modalOpen, setModalOpen] = useState(false)
+
   const toggleLike = () => {
     setLiked((prev) => !prev)
     setLikeCount((prev) => (liked ? prev - 1 : prev + 1))
+  }
+
+  const handleAccept = () => {
+    setModalOpen(true)
+  }
+
+  const handleModalSubmit = () => {
+    setModalOpen(false)
+  }
+
+  const handleOutsideClick = (e: MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      setModalOpen(false)
+    }
   }
 
   return (
@@ -103,10 +120,46 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       </div>
 
       <div className="mt-6 text-center">
-        <Button type="primary" className="max-w-100">
+        <Button type="primary" className="max-w-100" onClick={handleAccept}>
           신청하기
         </Button>
       </div>
+      {modalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg"
+          onClick={handleOutsideClick}
+        >
+          <div
+            className="bg-custom-black min-w-100 rounded-lg border-2 p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="mb-4 text-xl font-semibold">🖥️ 메세지 입력</h2>
+            <input
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="text-custom-white focus:border-custom-white border-custom-gray-300 w-full rounded-lg border-2 bg-transparent px-4 py-3 outline-none"
+              placeholder="작성자에게 보낼 메세지를 입력하세요"
+            />
+            <div className="mt-4 flex w-full items-center justify-center gap-4">
+              <Button
+                type="primary"
+                onClick={handleModalSubmit}
+                className="max-w-30"
+              >
+                제출
+              </Button>
+              <Button
+                type="tertiary"
+                onClick={() => setModalOpen(false)}
+                className="max-w-30"
+              >
+                취소
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
