@@ -55,7 +55,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
         {/* 좋아요 & 조회수 */}
         <div className="flex items-center gap-4 text-sm text-gray-500">
-          <button onClick={toggleLike} className="flex items-center gap-1">
+          <button
+            onClick={toggleLike}
+            className="flex cursor-pointer items-center gap-1"
+          >
             <Image
               src={liked ? heartFill : heartEmpty}
               alt="좋아요"
