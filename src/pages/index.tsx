@@ -4,7 +4,6 @@ import logo from '@/assets/imgs/logo.png'
 import top1 from '@/assets/imgs/landing/1top.png'
 import top2 from '@/assets/imgs/landing/2top.png'
 import bottom3 from '@/assets/imgs/landing/3bottom.png'
-import top4 from '@/assets/imgs/landing/4top.png'
 import full6 from '@/assets/imgs/landing/6full.png'
 import bottom7 from '@/assets/imgs/landing/7bottom.png'
 import { useRouter } from 'next/router'
@@ -96,77 +95,65 @@ export default function LandingPage() {
         <h2 className="py-10 text-center text-3xl font-bold">
           이렇게 이용해보세요!
         </h2>
-        <div className="flex flex-col gap-20">
-          {[
-            {
-              step: '1',
-              title: '회원가입 & 로그인',
-              desc: '빠른 가입 후 마이페이지를 꾸며보세요.',
-              image: top2,
-              extraImage: bottom3,
-            },
-            {
-              step: '2',
-              title: '모집 & 탐색',
-              desc: '팀을 만들거나 지원하세요.',
-              image: top4,
-              extraImage: full6,
-            },
-            {
-              step: '3',
-              title: '신청 / 수락 / 오픈채팅',
-              desc: '수락 후 바로 소통을 시작하세요!',
-              image: bottom7,
-            },
-          ].map((item) => (
-            <motion.div
-              key={item.step}
-              className="border-custom-gray-100 flex items-start justify-center gap-4 rounded-2xl border"
-              initial="hidden"
-              whileInView="visible"
-              variants={fadeInUp}
-            >
-              <div className="text-primary pt-4 pl-4 text-2xl font-bold md:text-8xl">
-                {item.step}
-              </div>
-              <div className="flex flex-col gap-4 pt-4 md:flex-row md:pt-8">
-                <div className="md:flex-1">
-                  <h4 className="text-xl font-semibold md:text-2xl">
-                    {item.title}
-                  </h4>
-                  <p className="text-gray-600 md:text-lg">{item.desc}</p>
-                </div>
-                <div className="flex items-center justify-center gap-2 pr-4 pb-4">
-                  <Image
-                    src={item.image}
-                    width={200}
-                    height={200}
-                    alt={item.title}
-                  />
-                  {item.extraImage && (
-                    <div>
-                      <Image
-                        src={item.extraImage}
-                        width={200}
-                        height={200}
-                        alt={`${item.title} 추가 이미지`}
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          ))}
+
+        {/* Step 1 */}
+        <div className="border-custom-gray-100 mb-20 flex flex-col items-center gap-6 rounded-2xl border p-6 md:flex-row md:justify-between md:px-10">
+          <div className="flex flex-col">
+            <div className="text-primary text-6xl font-bold md:text-8xl">1</div>
+            <h4 className="mt-2 text-xl font-semibold md:text-3xl">
+              회원가입 & 로그인
+            </h4>
+            <p className="text-gray-600 md:pt-2 md:text-lg">
+              빠른 가입 후 마이페이지를 꾸며보세요.
+            </p>
+          </div>
+          <div className="flex justify-end gap-4 md:w-1/2">
+            <Image src={top2} alt="회원가입 & 로그인" className="h-60 w-40" />
+            <Image
+              src={bottom3}
+              alt="회원가입 & 로그인 추가 이미지"
+              className="h-60 w-40"
+            />
+          </div>
+        </div>
+
+        {/* Step 2 */}
+        <div className="border-custom-gray-100 mb-20 flex flex-col items-center gap-6 rounded-2xl border p-6 md:flex-row-reverse md:justify-between md:px-10">
+          <div className="flex flex-col items-start md:w-2/3">
+            <div className="text-primary text-6xl font-bold md:text-8xl">2</div>
+            <h4 className="mt-2 text-xl font-semibold md:text-3xl">
+              모집 & 탐색
+            </h4>
+            <p className="text-gray-600 md:pt-2 md:text-lg">
+              팀을 만들거나 지원하세요.
+            </p>
+          </div>
+          <Image src={full6} alt="모집 & 탐색 추가 이미지" className="w-50" />
+        </div>
+
+        {/* Step 3 */}
+        <div className="border-custom-gray-100 mb-20 flex flex-col items-center gap-6 rounded-2xl border p-6 md:flex-row md:justify-between md:px-10">
+          <div className="flex flex-col items-start md:w-1/2">
+            <div className="text-primary text-6xl font-bold md:text-8xl">3</div>
+            <h4 className="mt-2 text-xl font-semibold md:text-3xl">
+              신청 / 수락 / 오픈채팅
+            </h4>
+            <p className="text-gray-600 md:pt-2 md:text-lg">
+              수락 후 바로 소통을 시작하세요!
+            </p>
+          </div>
+          <div className="flex justify-end md:w-1/2">
+            <Image src={bottom7} width={250} alt="신청 / 수락 / 오픈채팅" />
+          </div>
         </div>
       </motion.section>
 
-      {/* CTA 섹션 */}
       <motion.section
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
         variants={fadeInUp}
-        className="flex items-center justify-center gap-4 pt-50 pb-20"
+        className="flex flex-col justify-center gap-4 pt-50 pb-20 md:flex-row md:items-center"
       >
         <Image src={top1} alt="image" className="w-60 md:w-100" />
         <p className="text-5xl font-bold">
