@@ -31,11 +31,9 @@ export const getUserData = async (accessToken: string) => {
         Authorization: `Bearer ${accessToken}`,
       },
     })
-    console.log(response.data)
     return response.data
   } catch (error) {
     console.error('사용자 정보 GET 실패:', error)
-    console.log('accessToken:', accessToken)
     throw error
   }
 }

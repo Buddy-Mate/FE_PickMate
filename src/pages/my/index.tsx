@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import ProfileCard from '@/components/Profile/ProfileCard'
 import Section from '@/components/Profile/Section'
 import { getUserData } from '@/libs/apis/auth'
 import { User } from '@/types/auth'
 import { getCookie } from 'cookies-next'
 import { GetServerSidePropsContext } from 'next'
-import React, { useState } from 'react'
+import React from 'react'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   console.log('req.headers.cookie:', context.req.headers.cookie)
@@ -15,10 +14,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     res: context.res,
   })
 
-  console.log(accessToken)
-
   const user = await getUserData(accessToken as string)
-  console.log(user)
 
   return {
     props: {
