@@ -27,7 +27,7 @@ export default function Button({
   className = '',
   disabled = false,
 }: ButtonProps) {
-  const baseStyles = `w-full rounded-lg px-6 py-3 text-lg font-bold shadow-lg transition-all duration-300`
+  const baseStyles = `w-full rounded-lg px-6 py-3 text-sm md:text-lg font-bold shadow-lg transition-all duration-300`
   const disabledStyles = disabled
     ? buttonStyles[`${type}Disabled`]
     : `${buttonStyles[type]} hover:scale-105 cursor-pointer`
