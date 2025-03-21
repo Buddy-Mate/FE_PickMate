@@ -12,7 +12,7 @@ type StudyCardProps = {
 }
 
 export default function ProjectCard({ study }: StudyCardProps) {
-  const { id, title, authorNickname, likes, views } = study
+  const { id, title, author, likes, views } = study
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(likes)
 
@@ -32,12 +32,12 @@ export default function ProjectCard({ study }: StudyCardProps) {
           <div className="flex items-center gap-2">
             <Image
               src={profile}
-              alt={authorNickname}
+              alt={author.nickname}
               width={40}
               height={40}
               className="rounded-full"
             />
-            <p className="text-gray-500">{authorNickname}</p>
+            <p className="text-gray-500">{author.nickname}</p>
           </div>
 
           {/* 좋아요 & 조회수 */}
