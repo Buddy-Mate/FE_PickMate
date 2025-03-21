@@ -1,4 +1,5 @@
 import { Project } from './project'
+import { Study } from './study'
 
 export type LoginResponse = {
   email: string
@@ -16,6 +17,8 @@ export type User = {
   email: string
   nickname: string
   bio?: string
-  writtenPosts: Project[] // 내가 쓴 게시글들 (작성한 프로젝트들)
-  appliedPosts: Project[] // 내가 신청한 게시글들 (신청한 프로젝트들)
+  writtenProjects: Project[]
+  writtenStudies: Study[]
+  appliedProjects: Project[]
+  appliedStudies: Study[]
 }

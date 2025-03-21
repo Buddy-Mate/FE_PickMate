@@ -25,13 +25,12 @@ export const login = async (data: LoginResponse) => {
 
 // 사용자 정보 GET
 export const getUserData = async (accessToken: string) => {
-  console.log('Access Token:', accessToken)
-
   try {
     const response = await axiosInstance.get('/api/auth/my', {
-      headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
     })
-    console.log(response.data)
     return response.data
   } catch (error) {
     console.error('사용자 정보 GET 실패:', error)

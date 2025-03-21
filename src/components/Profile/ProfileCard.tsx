@@ -9,7 +9,7 @@ import { useAuthStore } from '@/store/authStore'
 type ProfileCardProps = {
   nickname: string
   email: string
-  bio: string
+  bio?: string
 }
 
 export default function ProfileCard({
@@ -43,13 +43,13 @@ export default function ProfileCard({
   }
 
   return (
-    <div className="border-custom-gray-200 mb-10 flex items-center justify-center gap-10 rounded-lg border-2 p-10">
+    <div className="border-custom-gray-200 mb-10 flex flex-col items-center justify-center gap-2 rounded-lg border-2 p-4 md:flex-row md:gap-10 md:p-10">
       <Image
         src={profile}
         alt="프로필 이미지"
         className="size-30 rounded-full object-cover"
       />
-      <div className="flex-1 space-y-3">
+      <div className="w-full space-y-3 md:flex-1">
         {isEditing ? (
           <>
             <div className="flex flex-col gap-2">
