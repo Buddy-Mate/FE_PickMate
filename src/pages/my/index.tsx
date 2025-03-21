@@ -7,8 +7,6 @@ import { GetServerSidePropsContext } from 'next'
 import React from 'react'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  console.log('req.headers.cookie:', context.req.headers.cookie)
-
   const accessToken = await getCookie('accessToken', {
     req: context.req,
     res: context.res,
