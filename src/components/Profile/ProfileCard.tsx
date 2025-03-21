@@ -9,7 +9,7 @@ import { useAuthStore } from '@/store/authStore'
 type ProfileCardProps = {
   nickname: string
   email: string
-  bio: string
+  bio?: string
 }
 
 export default function ProfileCard({

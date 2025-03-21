@@ -7,35 +7,36 @@ import { getCookie } from 'cookies-next'
 import { GetServerSidePropsContext } from 'next'
 import React, { useState } from 'react'
 
-// export async function getServerSideProps(context: GetServerSidePropsContext) {
-//   const accessToken = getCookie('accessToken', {
-//     req: context.req,
-//     res: context.res,
-//   })
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  console.log('req.headers.cookie:', context.req.headers.cookie)
 
-//   const user = await getUserData(accessToken as string)
+  const accessToken = await getCookie('accessToken', {
+    req: context.req,
+    res: context.res,
+  })
 
-//   return {
-//     props: {
-//       user: user || null,
-//     },
-//   }
-// }
+  console.log(accessToken)
 
-// type MyProps = {
-//   user: User | null
-// }
+  const user = await getUserData(accessToken as string)
+  console.log(user)
 
-// export default function My({ user }: MyProps) {
-export default function My() {
-  const [bio, setBio] = useState('')
-  const nickname = 'example'
-  const email = 'email@example.com'
+  return {
+    props: {
+      user: user || null,
+    },
+  }
+}
 
+type MyProps = {
+  user: User | null
+}
+
+export default function My({ user }: MyProps) {
+  if (!user) return
   return (
     <div className="mx-auto w-full max-w-[1200px] px-10 py-10">
-      <h1 className="my-4 text-3xl font-bold">{nickname}님의 정보</h1>
-      <ProfileCard nickname={nickname} email={email} bio={bio} />
+      <h1 className="my-4 text-3xl font-bold">{user?.nickname}님의 정보</h1>
+      <ProfileCard nickname={user.nickname} email={user.email} bio={user.bio} />
 
       <Section title="📄 내가 등록한" type="register" />
 
