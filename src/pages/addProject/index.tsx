@@ -65,7 +65,7 @@ export default function AddProject() {
 
   useEffect(() => {
     if (selectedDate) {
-      const formattedDate = selectedDate.toISOString().split('T')[0]
+      const formattedDate = selectedDate.toISOString()
       setValue('deadline', formattedDate)
     } else {
       setValue('deadline', '')
