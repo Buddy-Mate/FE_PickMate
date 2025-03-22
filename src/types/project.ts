@@ -9,12 +9,13 @@ export type Project = {
   id: number
   title: string
   description: string
-  stack: string[]
+  techStack: string[]
   deadline: string
-  author: {
-    userId: number
-    userNickname: string
-  }
+  authorNickname: string
+  // author: {
+  //   userId: number
+  //   userNickname: string
+  // }
   likes: number
   views: number
   createdAt: string

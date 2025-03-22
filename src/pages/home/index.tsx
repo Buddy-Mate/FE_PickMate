@@ -3,8 +3,8 @@ import Dropdown from '@/components/Dropdown'
 import Pagination from '@/components/Pagination'
 import ProjectList from '@/components/ProjectList'
 import SearchBar from '@/components/SearchBar'
-import { PROJECTS } from '@/constants/PROJECTS'
 import { getAllProjects } from '@/libs/apis/project'
+import { Project } from '@/types/project'
 import { getCookie } from 'cookies-next'
 import { GetServerSidePropsContext } from 'next'
 import { useState } from 'react'
@@ -25,10 +25,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-export default function Home() {
+type HomeProps = {
+  projects: Project[]
+}
+
+export default function Home({ projects }: HomeProps) {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6
-  const totalPages = Math.ceil(PROJECTS.length / itemsPerPage)
+  const totalPages = Math.ceil(projects.length / itemsPerPage)
 
   return (
     <div>
@@ -38,7 +42,11 @@ export default function Home() {
           <Dropdown />
           <SearchBar />
         </div>
-        <ProjectList currentPage={currentPage} />
+        <ProjectList
+          currentPage={currentPage}
+          projects={projects}
+          itemsPerPage={itemsPerPage}
+        />
         <Pagination
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
