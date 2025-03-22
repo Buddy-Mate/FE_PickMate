@@ -4,7 +4,26 @@ import Pagination from '@/components/Pagination'
 import ProjectList from '@/components/ProjectList'
 import SearchBar from '@/components/SearchBar'
 import { PROJECTS } from '@/constants/PROJECTS'
+import { getAllProjects } from '@/libs/apis/project'
+import { getCookie } from 'cookies-next'
+import { GetServerSidePropsContext } from 'next'
 import { useState } from 'react'
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const accessToken = await getCookie('accessToken', {
+    req: context.req,
+    res: context.res,
+  })
+  const projects = await getAllProjects(accessToken as string)
+
+  console.log(projects)
+
+  return {
+    props: {
+      projects,
+    },
+  }
+}
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState(1)

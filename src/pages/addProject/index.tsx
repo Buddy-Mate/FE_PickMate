@@ -9,6 +9,8 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import '@/styles/customDatePicker.css'
 import { useRouter } from 'next/router'
+import { createProject } from '@/libs/apis/project'
+import Loading from '@/components/Loading'
 
 type FormData = {
   title: string
@@ -32,6 +34,8 @@ export default function AddProject() {
   const [stacks, setStacks] = useState<string[]>([])
   const [stackTag, setStackTag] = useState('')
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const router = useRouter()
 
@@ -68,9 +72,22 @@ export default function AddProject() {
     }
   }, [selectedDate, setValue])
 
-  const onSubmit = (data: FormData) => {
-    console.log(data)
+  const onSubmit = async (data: FormData) => {
+    setIsLoading(true)
+    try {
+      await createProject(data)
+      alert('프로젝트 등록 성공!')
+      router.push('/home')
+      console.log(data)
+    } catch (error) {
+      alert('프로젝트 등록에 실패했습니다. 다시 시도해주세요.')
+      console.error('프로젝트 등록 에러:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
+
+  if (isLoading) return <Loading />
 
   return (
     <div className="mx-auto w-full max-w-[1200px] px-10 py-10">
