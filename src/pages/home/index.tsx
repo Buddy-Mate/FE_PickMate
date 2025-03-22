@@ -16,8 +16,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   })
   const projects = await getAllProjects(accessToken as string)
 
-  console.log(projects)
-
   return {
     props: {
       projects,

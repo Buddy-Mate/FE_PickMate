@@ -13,7 +13,6 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const accessToken = getCookie('accessToken')
-    console.log('accessToken from cookie:', accessToken)
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`
     }
@@ -22,8 +21,6 @@ axiosInstance.interceptors.request.use(
     if (config.data instanceof FormData) {
       config.headers['Content-Type'] = 'multipart/form-data'
     }
-
-    console.log('Request Headers:', config.headers)
 
     return config
   },

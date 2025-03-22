@@ -1,6 +1,5 @@
-import { GetServerSideProps } from 'next'
+import { GetServerSidePropsContext } from 'next'
 import { Project } from '@/types/project'
-import { PROJECTS } from '@/constants/PROJECTS'
 import Image from 'next/image'
 import profile from '@/assets/icons/profile.png'
 import Button from '@/components/Button'
@@ -8,19 +7,23 @@ import { MouseEvent, useState } from 'react'
 import heartEmpty from '@/assets/icons/heartEmpty.png'
 import heartFill from '@/assets/icons/heartFill.png'
 import eyeVisible from '@/assets/icons/eyeVisible.png'
+import { getProjectById } from '@/libs/apis/project'
+import { getCookie } from 'cookies-next'
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const { id } = params!
-
-  // id가 string | undefined 타입일 수 있으므로, number로 변환
-  const projectId = Array.isArray(id) ? Number(id[0]) : Number(id)
-
-  // 더미 데이터에서 해당 id의 프로젝트 정보 찾기
-  const project = PROJECTS.find((p) => p.id === projectId)
-
-  if (!project) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  if (!context.params?.id) {
     return { notFound: true }
   }
+
+  const accessToken = await getCookie('accessToken', {
+    req: context.req,
+    res: context.res,
+  })
+
+  const project = await getProjectById(
+    Number(context.params.id),
+    accessToken || '',
+  )
 
   return {
     props: {
@@ -73,12 +76,14 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
             alt="프로필 이미지"
             className="size-10 rounded-full object-cover"
           />
-          <p>{project.author.nickname}</p>
+          <p>{project.authorNickname}</p>
         </div>
       </div>
 
       <div className="flex items-center justify-between py-2">
-        <span className="text-primary text-lg">📅 {project.deadline} 까지</span>
+        <span className="text-primary text-lg">
+          📅 {project.deadline.split('T')[0]} 까지
+        </span>
         <div className="flex items-center gap-4 text-sm text-gray-500">
           <button
             onClick={toggleLike}
@@ -110,12 +115,12 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       <div className="pb-10">
         <h2 className="pt-10 text-2xl font-semibold">⚒️ 기술 스택</h2>
         <div className="my-2 flex flex-wrap gap-2">
-          {project.stack.map((tech) => (
+          {project.techStack.map((stack, index) => (
             <span
-              key={tech}
+              key={index}
               className="bg-primary/10 text-primary rounded-full px-3 py-1 text-sm"
             >
-              {tech}
+              {stack}
             </span>
           ))}
         </div>

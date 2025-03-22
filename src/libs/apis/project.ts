@@ -3,7 +3,6 @@ import axiosInstance from '../axiosInstance'
 
 // 프로젝트 생성 (CREATE)
 export const createProject = async (data: ProjectDataResponse) => {
-  console.log(data)
   try {
     const response = await axiosInstance.post('/projects/addProject', data)
     return response.data
@@ -29,9 +28,13 @@ export const getAllProjects = async (accessToken: string) => {
 }
 
 // 단일 프로젝트 조회 (READ)
-export const getProjectById = async (id: number) => {
+export const getProjectById = async (id: number, accessToken: string) => {
   try {
-    const response = await axiosInstance.get(`/projects/${id}`)
+    const response = await axiosInstance.get(`/projects/${id}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
     return response.data
   } catch (error) {
     console.error('단일 프로젝트 조회 실패:', error)

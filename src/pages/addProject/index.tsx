@@ -78,7 +78,6 @@ export default function AddProject() {
       await createProject(data)
       alert('프로젝트 등록 성공!')
       router.push('/home')
-      console.log(data)
     } catch (error) {
       alert('프로젝트 등록에 실패했습니다. 다시 시도해주세요.')
       console.error('프로젝트 등록 에러:', error)
