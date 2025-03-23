@@ -9,6 +9,7 @@ import heartFill from '@/assets/icons/heartFill.png'
 import eyeVisible from '@/assets/icons/eyeVisible.png'
 import { getProjectById } from '@/libs/apis/project'
 import { getCookie } from 'cookies-next'
+import { useAuthStore } from '@/store/authStore'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!context.params?.id) {
@@ -37,6 +38,9 @@ type ProjectDetailProps = {
 }
 
 export default function ProjectDetail({ project }: ProjectDetailProps) {
+  const { user } = useAuthStore()
+  const isAuthor = user?.nickname === project.authorNickname
+
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(project.likes)
 
@@ -127,9 +131,28 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       </div>
 
       <div className="mt-6 text-center">
-        <Button type="primary" className="max-w-100" onClick={handleAccept}>
-          신청하기
-        </Button>
+        {isAuthor ? (
+          <div className="">
+            <Button
+              type="secondary"
+              className="max-w-100 cursor-not-allowed"
+              disabled
+            >
+              편집하기
+            </Button>
+            <Button
+              type="tertiary"
+              className="max-w-100 cursor-not-allowed"
+              disabled
+            >
+              삭제하기
+            </Button>
+          </div>
+        ) : (
+          <Button type="primary" className="max-w-100" onClick={handleAccept}>
+            신청하기
+          </Button>
+        )}
       </div>
       {modalOpen && (
         <div
