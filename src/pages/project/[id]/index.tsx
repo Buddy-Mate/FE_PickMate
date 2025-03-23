@@ -69,6 +69,10 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
     }
   }
 
+  const handleEdit = () => {
+    router.push(`edit/${project.id}`)
+  }
+
   const handleDelete = async () => {
     try {
       await deleteProject(project.id)
@@ -124,11 +128,11 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
 
       <div className="border-t pt-10">
         <h2 className="mb-2 text-2xl font-semibold">📄 프로젝트 설명</h2>
-        <p className="text-custom-gray-200 max-h-100 overflow-y-auto">
-          <div className="bg-custom-gray-300 rounded-lg p-6">
+        <div className="text-custom-gray-200 max-h-100 overflow-y-auto">
+          <p className="bg-custom-gray-300 rounded-lg p-6">
             {project.description}
-          </div>
-        </p>
+          </p>
+        </div>
       </div>
 
       <div className="pb-10">
@@ -148,7 +152,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       <div className="mt-6 text-center">
         {isAuthor ? (
           <div className="flex items-center justify-center gap-4">
-            <Button type="secondary" className="max-w-100">
+            <Button type="secondary" className="max-w-100" onClick={handleEdit}>
               편집하기
             </Button>
             <Button

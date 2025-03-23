@@ -43,9 +43,17 @@ export const getProjectById = async (id: number, accessToken: string) => {
 }
 
 // 프로젝트 수정 (UPDATE)
-export const updateProject = async (id: number, data: ProjectDataResponse) => {
+export const updateProject = async (
+  id: number,
+  data: ProjectDataResponse,
+  accessToken: string,
+) => {
   try {
-    const response = await axiosInstance.put(`/projects/${id}`, data)
+    const response = await axiosInstance.put(`/projects/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
     return response.data
   } catch (error) {
     console.error('프로젝트 수정 실패:', error)
