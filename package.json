@@ -21,6 +21,7 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
     "react-lottie": "^1.2.10",
+    "react-toastify": "^11.0.5",
     "zod": "^3.24.2",
     "zustand": "^5.0.3"
   },
