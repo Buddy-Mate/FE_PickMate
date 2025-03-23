@@ -1,10 +1,13 @@
+import { User } from '@/types/auth'
 import { getCookie } from 'cookies-next'
 import { create } from 'zustand'
 
 interface AuthStore {
   isLoggedIn: boolean
   accessToken: string | null
+  user: User | null
   login: (token: string) => void
+  setUser: (user: User) => void
   logout: () => void
 }
 
@@ -14,7 +17,9 @@ export const useAuthStore = create<AuthStore>((set) => {
   return {
     isLoggedIn: !!token, // 토큰이 있으면 로그인 상태로 설정
     accessToken: token,
+    user: null,
     login: (token: string) => set({ isLoggedIn: true, accessToken: token }),
+    setUser: (user: User) => set({ user }),
     logout: () => set({ isLoggedIn: false, accessToken: null }),
   }
 })

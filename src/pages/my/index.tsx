@@ -1,31 +1,11 @@
 import ProfileCard from '@/components/Profile/ProfileCard'
 import Section from '@/components/Profile/Section'
-import { getUserData } from '@/libs/apis/auth'
-import { User } from '@/types/auth'
-import { getCookie } from 'cookies-next'
-import { GetServerSidePropsContext } from 'next'
+import { useAuthStore } from '@/store/authStore'
 import React from 'react'
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const accessToken = await getCookie('accessToken', {
-    req: context.req,
-    res: context.res,
-  })
+export default function My() {
+  const { user } = useAuthStore()
 
-  const user = await getUserData(accessToken as string)
-
-  return {
-    props: {
-      user: user || null,
-    },
-  }
-}
-
-type MyProps = {
-  user: User | null
-}
-
-export default function My({ user }: MyProps) {
   if (!user) return
   return (
     <div className="mx-auto w-full max-w-[1200px] px-10 py-10">
