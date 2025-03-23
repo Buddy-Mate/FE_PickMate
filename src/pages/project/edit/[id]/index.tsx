@@ -2,7 +2,13 @@ import Button from '@/components/Button'
 import { projectSchema } from '@/utils/projectSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Image from 'next/image'
-import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react'
+import {
+  ChangeEvent,
+  KeyboardEvent,
+  MouseEvent,
+  useEffect,
+  useState,
+} from 'react'
 import { useForm } from 'react-hook-form'
 import remove from '@/assets/icons/remove.png'
 import DatePicker from 'react-datepicker'
@@ -210,12 +216,15 @@ export default function EditProject({ project }: EditProjectProps) {
           <Button
             type="secondary"
             className="max-w-30"
-            onClick={() => router.back()}
+            onClick={(e: MouseEvent<HTMLButtonElement>) => {
+              e.preventDefault()
+              router.back()
+            }}
           >
             취소하기
           </Button>
           <Button type="primary" className="max-w-30">
-            수정하기{' '}
+            수정하기
           </Button>
         </div>
       </form>
