@@ -1,6 +1,5 @@
-import { GetServerSideProps } from 'next'
+import { GetServerSidePropsContext } from 'next'
 import { Project } from '@/types/project'
-import { PROJECTS } from '@/constants/PROJECTS'
 import Image from 'next/image'
 import profile from '@/assets/icons/profile.png'
 import Button from '@/components/Button'
@@ -8,19 +7,35 @@ import { MouseEvent, useState } from 'react'
 import heartEmpty from '@/assets/icons/heartEmpty.png'
 import heartFill from '@/assets/icons/heartFill.png'
 import eyeVisible from '@/assets/icons/eyeVisible.png'
+import { deleteProject, getProjectById } from '@/libs/apis/project'
+import { getCookie } from 'cookies-next'
+import { useAuthStore } from '@/store/authStore'
+import { useRouter } from 'next/router'
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const { id } = params!
+// 줄바꿈
+const formatTextWithLineBreaks = (text: string) => {
+  return text.split('\n').map((line, index) => (
+    <span key={index}>
+      {line}
+      <br />
+    </span>
+  ))
+}
 
-  // id가 string | undefined 타입일 수 있으므로, number로 변환
-  const projectId = Array.isArray(id) ? Number(id[0]) : Number(id)
-
-  // 더미 데이터에서 해당 id의 프로젝트 정보 찾기
-  const project = PROJECTS.find((p) => p.id === projectId)
-
-  if (!project) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  if (!context.params?.id) {
     return { notFound: true }
   }
+
+  const accessToken = await getCookie('accessToken', {
+    req: context.req,
+    res: context.res,
+  })
+
+  const project = await getProjectById(
+    Number(context.params.id),
+    accessToken || '',
+  )
 
   return {
     props: {
@@ -34,11 +49,16 @@ type ProjectDetailProps = {
 }
 
 export default function ProjectDetail({ project }: ProjectDetailProps) {
+  const { user } = useAuthStore()
+  const isAuthor = user?.nickname === project.authorNickname
+
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(project.likes)
 
   const [message, setMessage] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
+
+  const router = useRouter()
 
   const toggleLike = () => {
     setLiked((prev) => !prev)
@@ -59,6 +79,22 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
     }
   }
 
+  const handleEdit = () => {
+    router.push(`edit/${project.id}`)
+  }
+
+  const handleDelete = async () => {
+    try {
+      await deleteProject(project.id)
+      alert('프로젝트가 삭제되었습니다.')
+      router.push('/home')
+    } catch (error) {
+      alert('프로젝트 삭제에 실패했습니다.')
+      console.error('프로젝트 삭제 오류:', error)
+      throw error
+    }
+  }
+
   return (
     <div className="mx-auto w-full max-w-[1200px] px-6 py-10">
       <div className="mb-4 flex items-center justify-between">
@@ -73,12 +109,14 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
             alt="프로필 이미지"
             className="size-10 rounded-full object-cover"
           />
-          <p>{project.author.nickname}</p>
+          <p>{project.authorNickname}</p>
         </div>
       </div>
 
       <div className="flex items-center justify-between py-2">
-        <span className="text-primary text-lg">📅 {project.deadline} 까지</span>
+        <span className="text-primary text-lg">
+          📅 {project.deadline.split('T')[0]} 까지
+        </span>
         <div className="flex items-center gap-4 text-sm text-gray-500">
           <button
             onClick={toggleLike}
@@ -100,31 +138,46 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
 
       <div className="border-t pt-10">
         <h2 className="mb-2 text-2xl font-semibold">📄 프로젝트 설명</h2>
-        <p className="text-custom-gray-200 max-h-100 overflow-y-auto">
+        <div className="text-custom-gray-200 max-h-100 overflow-y-auto">
           <div className="bg-custom-gray-300 rounded-lg p-6">
-            {project.description}
+            {formatTextWithLineBreaks(project.description)}
           </div>
-        </p>
+        </div>
       </div>
 
       <div className="pb-10">
         <h2 className="pt-10 text-2xl font-semibold">⚒️ 기술 스택</h2>
         <div className="my-2 flex flex-wrap gap-2">
-          {project.stack.map((tech) => (
+          {project.techStack.map((stack, index) => (
             <span
-              key={tech}
+              key={index}
               className="bg-primary/10 text-primary rounded-full px-3 py-1 text-sm"
             >
-              {tech}
+              {stack}
             </span>
           ))}
         </div>
       </div>
 
       <div className="mt-6 text-center">
-        <Button type="primary" className="max-w-100" onClick={handleAccept}>
-          신청하기
-        </Button>
+        {isAuthor ? (
+          <div className="flex items-center justify-center gap-4">
+            <Button type="secondary" className="max-w-100" onClick={handleEdit}>
+              편집하기
+            </Button>
+            <Button
+              type="tertiary"
+              className="max-w-100"
+              onClick={handleDelete}
+            >
+              삭제하기
+            </Button>
+          </div>
+        ) : (
+          <Button type="primary" className="max-w-100" onClick={handleAccept}>
+            신청하기
+          </Button>
+        )}
       </div>
       {modalOpen && (
         <div

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import logo from '@/assets/imgs/logo.png'
 import Button from '@/components/Button'
-import { login } from '@/libs/apis/auth'
+import { getUserData, login } from '@/libs/apis/auth'
 import { setCookie } from 'cookies-next'
 import { useAuthStore } from '@/store/authStore'
 import { useState } from 'react'
@@ -28,7 +28,7 @@ export default function Login() {
   })
 
   const router = useRouter()
-  const { login: setLogin } = useAuthStore()
+  const { login: setLogin, setUser } = useAuthStore()
   const [isLoading, setIsLoading] = useState(false)
 
   const onSubmit = async (data: FormData) => {
@@ -43,6 +43,9 @@ export default function Login() {
         secure: process.env.NODE_ENV === 'production',
       })
       setLogin(token)
+
+      const userData = await getUserData(token)
+      setUser(userData)
 
       alert('로그인 성공!')
       router.push('/home')

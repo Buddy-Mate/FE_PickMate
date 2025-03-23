@@ -73,7 +73,7 @@ export default function StudyDetail({ study }: StudyDetailProps) {
             alt="프로필 이미지"
             className="size-10 rounded-full object-cover"
           />
-          <p>{study.author.nickname}</p>
+          <p>{study.authorNickname}</p>
         </div>
       </div>
 

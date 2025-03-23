@@ -12,7 +12,7 @@ type ProjectCardProps = {
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
-  const { id, title, stack, author, likes, views } = project
+  const { id, title, techStack, authorNickname, likes, views } = project
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(likes)
 
@@ -29,14 +29,15 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
         {/* 기술 스택 */}
         <ul className="my-2 flex flex-wrap gap-2">
-          {stack.map((tech, index) => (
-            <li
-              key={index}
-              className="rounded-full bg-gray-950 px-2 py-1 text-sm text-white"
-            >
-              {tech}
-            </li>
-          ))}
+          {techStack.length > 0 &&
+            techStack.map((stack, index) => (
+              <li
+                key={index}
+                className="rounded-full bg-gray-950 px-2 py-1 text-sm text-white"
+              >
+                {stack}
+              </li>
+            ))}
         </ul>
       </Link>
 
@@ -45,12 +46,12 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         <div className="flex items-center gap-2">
           <Image
             src={profile}
-            alt={author.nickname}
+            alt={authorNickname}
             width={40}
             height={40}
             className="rounded-full"
           />
-          <p className="text-gray-500">{author.nickname}</p>
+          <p className="text-gray-500">{authorNickname}</p>
         </div>
 
         {/* 좋아요 & 조회수 */}

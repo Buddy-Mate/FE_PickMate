@@ -1,12 +1,21 @@
-import { User } from './auth'
+export type ProjectDataResponse = {
+  title: string
+  description: string
+  techStack: string[]
+  deadline: string
+}
 
 export type Project = {
   id: number
   title: string
   description: string
-  stack: string[]
+  techStack: string[]
   deadline: string
-  author: User
+  authorNickname: string
+  // author: {
+  //   userId: number
+  //   userNickname: string
+  // }
   likes: number
   views: number
   createdAt: string
