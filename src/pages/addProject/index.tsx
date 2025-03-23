@@ -15,7 +15,7 @@ import Loading from '@/components/Loading'
 type FormData = {
   title: string
   description: string
-  stack: string[]
+  techStack: string[]
   deadline: string
 }
 
@@ -60,7 +60,7 @@ export default function AddProject() {
 
   // stacks 배열이 바뀔 때마다 react-hook-form에 주입
   useEffect(() => {
-    setValue('stack', stacks)
+    setValue('techStack', stacks)
   }, [stacks, setValue])
 
   useEffect(() => {
@@ -146,8 +146,8 @@ export default function AddProject() {
               기술 스택은 최대 8개까지 입력할 수 있습니다
             </p>
           )}
-          {errors.stack && (
-            <p className="text-custom-red">{errors.stack.message}</p>
+          {errors.techStack && (
+            <p className="text-custom-red">{errors.techStack.message}</p>
           )}
         </div>
         <div className="flex flex-col gap-2">

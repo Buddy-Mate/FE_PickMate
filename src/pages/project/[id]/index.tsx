@@ -7,9 +7,10 @@ import { MouseEvent, useState } from 'react'
 import heartEmpty from '@/assets/icons/heartEmpty.png'
 import heartFill from '@/assets/icons/heartFill.png'
 import eyeVisible from '@/assets/icons/eyeVisible.png'
-import { getProjectById } from '@/libs/apis/project'
+import { deleteProject, getProjectById } from '@/libs/apis/project'
 import { getCookie } from 'cookies-next'
 import { useAuthStore } from '@/store/authStore'
+import { useRouter } from 'next/router'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!context.params?.id) {
@@ -47,6 +48,8 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
   const [message, setMessage] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
 
+  const router = useRouter()
+
   const toggleLike = () => {
     setLiked((prev) => !prev)
     setLikeCount((prev) => (liked ? prev - 1 : prev + 1))
@@ -63,6 +66,18 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
   const handleOutsideClick = (e: MouseEvent) => {
     if (e.target === e.currentTarget) {
       setModalOpen(false)
+    }
+  }
+
+  const handleDelete = async () => {
+    try {
+      await deleteProject(project.id)
+      alert('프로젝트가 삭제되었습니다.')
+      router.push('/home')
+    } catch (error) {
+      alert('프로젝트 삭제에 실패했습니다.')
+      console.error('프로젝트 삭제 오류:', error)
+      throw error
     }
   }
 
@@ -132,18 +147,14 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
 
       <div className="mt-6 text-center">
         {isAuthor ? (
-          <div className="">
-            <Button
-              type="secondary"
-              className="max-w-100 cursor-not-allowed"
-              disabled
-            >
+          <div className="flex items-center justify-center gap-4">
+            <Button type="secondary" className="max-w-100">
               편집하기
             </Button>
             <Button
               type="tertiary"
-              className="max-w-100 cursor-not-allowed"
-              disabled
+              className="max-w-100"
+              onClick={handleDelete}
             >
               삭제하기
             </Button>

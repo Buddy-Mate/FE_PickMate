@@ -1,7 +1,7 @@
 export type ProjectDataResponse = {
   title: string
   description: string
-  stack: string[]
+  techStack: string[]
   deadline: string
 }
 
