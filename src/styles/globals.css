@@ -62,3 +62,26 @@ body {
   color: var(--foreground);
   font-family: 'Pretendard-Regular', Arial, Helvetica, sans-serif;
 }
+
+/* 스크롤바 기본 설정 */
+@layer utilities {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #9fa6b2;
+    border-radius: 4px;
+    border: 2px solid transparent;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #6e6e82;
+    cursor: pointer;
+  }
+}

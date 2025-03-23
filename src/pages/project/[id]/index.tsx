@@ -12,6 +12,16 @@ import { getCookie } from 'cookies-next'
 import { useAuthStore } from '@/store/authStore'
 import { useRouter } from 'next/router'
 
+// 줄바꿈
+const formatTextWithLineBreaks = (text: string) => {
+  return text.split('\n').map((line, index) => (
+    <span key={index}>
+      {line}
+      <br />
+    </span>
+  ))
+}
+
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!context.params?.id) {
     return { notFound: true }
@@ -129,9 +139,9 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       <div className="border-t pt-10">
         <h2 className="mb-2 text-2xl font-semibold">📄 프로젝트 설명</h2>
         <div className="text-custom-gray-200 max-h-100 overflow-y-auto">
-          <p className="bg-custom-gray-300 rounded-lg p-6">
-            {project.description}
-          </p>
+          <div className="bg-custom-gray-300 rounded-lg p-6">
+            {formatTextWithLineBreaks(project.description)}
+          </div>
         </div>
       </div>
 
