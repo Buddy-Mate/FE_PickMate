@@ -1,11 +1,9 @@
-import { User } from './auth'
-
 export type Study = {
   id: number
   title: string
   description: string
   deadline: string
-  author: User
+  authorNickname: string
   likes: number
   views: number
   createdAt: string
