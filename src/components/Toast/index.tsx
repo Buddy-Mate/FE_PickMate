@@ -5,6 +5,7 @@ const option = {
   position: 'top-center' as ToastPosition,
   autoClose: 3000,
   hideProgressBar: true,
+  closeButton: false,
   closeOnClick: true,
   pauseOnHover: true,
   draggable: true,

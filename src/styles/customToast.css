@@ -1,5 +1,6 @@
 .toast-success {
-  background: #e2eafc !important;
+  font-family: 'Pretendard-Regular' !important;
+  background: #333341 !important;
   color: #5097fa !important;
   font-size: 16px !important;
   border-radius: 0.5rem !important;
@@ -11,7 +12,8 @@
 }
 
 .toast-error {
-  background: #fde4e4 !important;
+  font-family: 'Pretendard-Regular' !important;
+  background: #333341 !important;
   color: #ff0000 !important;
   font-size: 16px !important;
   border-radius: 0.5rem !important;
@@ -23,7 +25,8 @@
 }
 
 .toast-info {
-  background: #f1edd3 !important;
+  font-family: 'Pretendard-Regular' !important;
+  background: #333341 !important;
   color: #ffc83c !important;
   font-size: 16px !important;
   border-radius: 0.5rem !important;
