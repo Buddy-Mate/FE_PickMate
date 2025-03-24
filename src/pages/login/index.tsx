@@ -11,6 +11,7 @@ import { setCookie } from 'cookies-next'
 import { useAuthStore } from '@/store/authStore'
 import { useState } from 'react'
 import Loading from '@/components/Loading'
+import { notify } from '@/components/Toast'
 
 type FormData = {
   email: string
@@ -47,10 +48,10 @@ export default function Login() {
       const userData = await getUserData(token)
       setUser(userData)
 
-      alert('로그인 성공!')
+      notify('success', '로그인 성공!')
       router.push('/home')
     } catch (error) {
-      alert('로그인에 실패했습니다.')
+      notify('error', '로그인에 실패했습니다.')
       console.error('로그인 에러:', error)
     } finally {
       setIsLoading(false)

@@ -17,14 +17,38 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     req: context.req,
     res: context.res,
   })
-  const projects = await getAllProjects(accessToken as string)
-  const user = await getUserData(accessToken as string)
 
-  return {
-    props: {
-      projects,
-      user,
-    },
+  // 1. accessToken 없으면 로그인 페이지로 리다이렉트
+  if (!accessToken) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+  }
+
+  // 2. accessToken이 있지만 API 호출에서 문제가 발생하면 try-catch로 에러 처리
+  try {
+    const projects = await getAllProjects(accessToken as string)
+    const user = await getUserData(accessToken as string)
+
+    return {
+      props: {
+        projects,
+        user,
+      },
+    }
+  } catch (error) {
+    // API 호출 실패 시 로그인 페이지로 리다이렉트 or 에러페이지로 보내기
+    console.error(error)
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    }
+    throw error
   }
 }
 

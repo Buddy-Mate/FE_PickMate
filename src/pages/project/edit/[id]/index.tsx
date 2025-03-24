@@ -19,6 +19,7 @@ import Loading from '@/components/Loading'
 import { GetServerSidePropsContext } from 'next'
 import { getCookie } from 'cookies-next'
 import { Project } from '@/types/project'
+import { notify } from '@/components/Toast'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!context.params?.id) {
@@ -119,10 +120,10 @@ export default function EditProject({ project }: EditProjectProps) {
     const accessToken = await getCookie('accessToken')
     try {
       await updateProject(Number(id), data, accessToken as string)
-      alert('프로젝트 수정 성공!')
+      notify('success', '프로젝트 수정 성공!')
       router.push(`/project/${id}`)
     } catch (error) {
-      alert('프로젝트 수정에 실패했습니다. 다시 시도해주세요.')
+      notify('error', '프로젝트 수정에 실패했습니다. 다시 시도해주세요.')
       console.error('프로젝트 수정 에러:', error)
     } finally {
       setIsLoading(false)

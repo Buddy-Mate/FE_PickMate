@@ -9,6 +9,7 @@ import Button from '@/components/Button'
 import { signup } from '@/libs/apis/auth'
 import { useState } from 'react'
 import Loading from '@/components/Loading'
+import { notify } from '@/components/Toast'
 
 type FormData = {
   email: string
@@ -36,10 +37,10 @@ export default function Signup() {
       const { email, nickname, password } = data
       await signup({ email, nickname, password })
 
-      alert('회원가입 성공!')
+      notify('success', '회원가입 성공!')
       router.push('/login')
     } catch (error) {
-      alert('회원가입에 실패했습니다.')
+      notify('error', '회원가입에 실패했습니다.')
       console.error('회원가입 에러:', error)
     } finally {
       setIsLoading(false)

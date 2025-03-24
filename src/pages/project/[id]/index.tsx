@@ -11,6 +11,7 @@ import { deleteProject, getProjectById } from '@/libs/apis/project'
 import { getCookie } from 'cookies-next'
 import { useAuthStore } from '@/store/authStore'
 import { useRouter } from 'next/router'
+import { notify } from '@/components/Toast'
 
 // 줄바꿈
 const formatTextWithLineBreaks = (text: string) => {
@@ -86,10 +87,10 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
   const handleDelete = async () => {
     try {
       await deleteProject(project.id)
-      alert('프로젝트가 삭제되었습니다.')
+      notify('success', '프로젝트가 삭제 성공!.')
       router.push('/home')
     } catch (error) {
-      alert('프로젝트 삭제에 실패했습니다.')
+      notify('error', '프로젝트 삭제에 실패했습니다.')
       console.error('프로젝트 삭제 오류:', error)
       throw error
     }

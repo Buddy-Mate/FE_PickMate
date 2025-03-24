@@ -4,10 +4,12 @@ import Loading from '@/components/Loading'
 import { useAuthStore } from '@/store/authStore'
 import '@/styles/globals.css'
 import '../styles/customDatePicker.css'
+import '../styles/customToast.css'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import Toast, { notify } from '@/components/Toast'
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -26,8 +28,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
     // 로그인 상태가 아니면 로그인 페이지로 리디렉션
     if (!isLoggedIn && !hideLayout) {
-      alert('로그인이 필요합니다!')
+      notify('info', '로그인이 필요합니다!')
       router.push('/login')
+      return
     }
 
     // 로그인한 사용자가 로그인 또는 회원가입 페이지에 접근하면 홈으로 리디렉션
@@ -36,6 +39,7 @@ export default function App({ Component, pageProps }: AppProps) {
       (router.pathname === '/login' || router.pathname === '/signup')
     ) {
       router.push('/home')
+      return
     } else {
       setLoading(false)
     }
@@ -72,6 +76,7 @@ export default function App({ Component, pageProps }: AppProps) {
         {!hideLayout && <Header />}
         <main className="mt-20 flex-1">
           <Component {...pageProps} />
+          <Toast />
         </main>
         {!hideLayout && <Footer />}
       </div>

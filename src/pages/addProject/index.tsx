@@ -16,6 +16,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { useRouter } from 'next/router'
 import { createProject } from '@/libs/apis/project'
 import Loading from '@/components/Loading'
+import { notify } from '@/components/Toast'
 
 type FormData = {
   title: string
@@ -81,10 +82,10 @@ export default function AddProject() {
     setIsLoading(true)
     try {
       await createProject(data)
-      alert('프로젝트 등록 성공!')
+      notify('success', '프로젝트 등록 성공!')
       router.push('/home')
     } catch (error) {
-      alert('프로젝트 등록에 실패했습니다. 다시 시도해주세요.')
+      notify('error', '프로젝트 등록에 실패했습니다. 다시 시도해주세요.')
       console.error('프로젝트 등록 에러:', error)
     } finally {
       setIsLoading(false)
