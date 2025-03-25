@@ -1,56 +1,22 @@
-import Footer from '@/components/Footer'
-import Header from '@/components/Header'
-import Loading from '@/components/Loading'
-import { useAuthStore } from '@/store/authStore'
 import '@/styles/globals.css'
 import '../styles/customDatePicker.css'
 import '../styles/customToast.css'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import Toast, { notify } from '@/components/Toast'
+import Footer from '@/components/Footer'
+import Header from '@/components/Header'
+import Loading from '@/components/Loading'
+import Toast from '@/components/Toast'
+import { useAuthGuard } from '@/hooks/useAuthGuard'
 
 export default function App({ Component, pageProps }: AppProps) {
-  const router = useRouter()
-  const noLayoutPages = ['/', '/login', '/signup']
-  const hideLayout = noLayoutPages.includes(router.pathname)
-
-  const { isLoggedIn } = useAuthStore()
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    // 랜딩페이지('/')는 로그인 여부와 상관없이 접근 가능
-    if (router.pathname === '/') {
-      setLoading(false)
-      return
-    }
-
-    // 로그인 상태가 아니면 로그인 페이지로 리디렉션
-    if (!isLoggedIn && !hideLayout) {
-      notify('info', '로그인이 필요합니다!')
-      router.push('/login')
-      return
-    }
-
-    // 로그인한 사용자가 로그인 또는 회원가입 페이지에 접근하면 홈으로 리디렉션
-    if (
-      isLoggedIn &&
-      (router.pathname === '/login' || router.pathname === '/signup')
-    ) {
-      router.push('/home')
-      return
-    } else {
-      setLoading(false)
-    }
-  }, [hideLayout, isLoggedIn, router, router.pathname])
+  const { loading, hideLayout } = useAuthGuard()
 
   if (loading) return <Loading />
 
   return (
     <>
       <Head>
-        {/* 기본 메타데이터 */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta charSet="UTF-8" />
         <meta
@@ -59,8 +25,6 @@ export default function App({ Component, pageProps }: AppProps) {
         />
         <meta name="author" content="BuddyMate 팀" />
         <title>PickMate</title>
-
-        {/* Open Graph 메타데이터 */}
         <meta
           property="og:title"
           content="PickMate - 토이프로젝트 팀 매칭 플랫폼"
