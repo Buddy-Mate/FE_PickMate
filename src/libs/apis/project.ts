@@ -13,13 +13,9 @@ export const createProject = async (data: ProjectDataResponse) => {
 }
 
 // 전체 프로젝트 조회 (READ)
-export const getAllProjects = async (accessToken: string) => {
+export const getAllProjects = async () => {
   try {
-    const response = await axiosInstance.get('/projects/all', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
+    const response = await axiosInstance.get('/projects/all')
     return response.data
   } catch (error) {
     console.error('프로젝트 조회 실패:', error)
@@ -28,13 +24,9 @@ export const getAllProjects = async (accessToken: string) => {
 }
 
 // 단일 프로젝트 조회 (READ)
-export const getProjectById = async (id: number, accessToken: string) => {
+export const getProjectById = async (id: number) => {
   try {
-    const response = await axiosInstance.get(`/projects/${id}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
+    const response = await axiosInstance.get(`/projects/${id}`)
     return response.data
   } catch (error) {
     console.error('단일 프로젝트 조회 실패:', error)

@@ -3,52 +3,17 @@ import Dropdown from '@/components/Dropdown'
 import Pagination from '@/components/Pagination'
 import ProjectList from '@/components/ProjectList'
 import SearchBar from '@/components/SearchBar'
-import { getUserData } from '@/libs/apis/auth'
 import { getAllProjects } from '@/libs/apis/project'
 import { useAuthStore } from '@/store/authStore'
 import { User } from '@/types/auth'
 import { Project } from '@/types/project'
-import { getCookie } from 'cookies-next'
-import { GetServerSidePropsContext } from 'next'
 import { useEffect, useState } from 'react'
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const accessToken = await getCookie('accessToken', {
-    req: context.req,
-    res: context.res,
-  })
-
-  // 1. accessToken 없으면 로그인 페이지로 리다이렉트
-  if (!accessToken) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
-
-  // 2. accessToken이 있지만 API 호출에서 문제가 발생하면 try-catch로 에러 처리
-  try {
-    const projects = await getAllProjects(accessToken as string)
-    const user = await getUserData(accessToken as string)
-
-    return {
-      props: {
-        projects,
-        user,
-      },
-    }
-  } catch (error) {
-    // API 호출 실패 시 로그인 페이지로 리다이렉트 or 에러페이지로 보내기
-    console.error(error)
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-    throw error
+export async function getStaticProps() {
+  const projects = await getAllProjects()
+  return {
+    props: { projects },
+    revalidate: 300, // 5분마다 revalidate
   }
 }
 
@@ -57,7 +22,7 @@ type HomeProps = {
   user: User
 }
 
-export default function Home({ projects, user }: HomeProps) {
+export default function HomePage({ projects, user }: HomeProps) {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6
   const totalPages = Math.ceil(projects.length / itemsPerPage)

@@ -8,7 +8,6 @@ import heartEmpty from '@/assets/icons/heartEmpty.png'
 import heartFill from '@/assets/icons/heartFill.png'
 import eyeVisible from '@/assets/icons/eyeVisible.png'
 import { deleteProject, getProjectById } from '@/libs/apis/project'
-import { getCookie } from 'cookies-next'
 import { useAuthStore } from '@/store/authStore'
 import { useRouter } from 'next/router'
 import { notify } from '@/components/Toast'
@@ -28,15 +27,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { notFound: true }
   }
 
-  const accessToken = await getCookie('accessToken', {
-    req: context.req,
-    res: context.res,
-  })
-
-  const project = await getProjectById(
-    Number(context.params.id),
-    accessToken || '',
-  )
+  const project = await getProjectById(Number(context.params.id))
 
   return {
     props: {
@@ -81,13 +72,13 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
   }
 
   const handleEdit = () => {
-    router.push(`edit/${project.id}`)
+    router.push(`/edit/project/${project.id}`)
   }
 
   const handleDelete = async () => {
     try {
       await deleteProject(project.id)
-      notify('success', '프로젝트가 삭제 성공!.')
+      notify('success', '프로젝트 삭제 성공!')
       router.push('/home')
     } catch (error) {
       notify('error', '프로젝트 삭제에 실패했습니다.')

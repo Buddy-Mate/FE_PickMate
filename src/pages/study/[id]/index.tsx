@@ -1,4 +1,4 @@
-import { GetServerSideProps } from 'next'
+import { GetServerSidePropsContext } from 'next'
 import Image from 'next/image'
 import profile from '@/assets/icons/profile.png'
 import Button from '@/components/Button'
@@ -7,20 +7,27 @@ import heartEmpty from '@/assets/icons/heartEmpty.png'
 import heartFill from '@/assets/icons/heartFill.png'
 import eyeVisible from '@/assets/icons/eyeVisible.png'
 import { Study } from '@/types/study'
-import { STUDIES } from '@/constants/STUDIES'
+import { deleteStudy, getStudyById } from '@/libs/apis/study'
+import { useAuthStore } from '@/store/authStore'
+import { notify } from '@/components/Toast'
+import { useRouter } from 'next/router'
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const { id } = params!
+// 줄바꿈
+const formatTextWithLineBreaks = (text: string) => {
+  return text.split('\n').map((line, index) => (
+    <span key={index}>
+      {line}
+      <br />
+    </span>
+  ))
+}
 
-  // id가 string | undefined 타입일 수 있으므로, number로 변환
-  const studyId = Array.isArray(id) ? Number(id[0]) : Number(id)
-
-  // 더미 데이터에서 해당 id의 프로젝트 정보 찾기
-  const study = STUDIES.find((s) => s.id === studyId)
-
-  if (!study) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  if (!context.params?.id) {
     return { notFound: true }
   }
+
+  const study = await getStudyById(Number(context.params.id))
 
   return {
     props: {
@@ -34,11 +41,16 @@ type StudyDetailProps = {
 }
 
 export default function StudyDetail({ study }: StudyDetailProps) {
+  const { user } = useAuthStore()
+  const isAuthor = user?.nickname === study.authorNickname
+
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(study.likes)
 
   const [message, setMessage] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
+
+  const router = useRouter()
 
   const toggleLike = () => {
     setLiked((prev) => !prev)
@@ -56,6 +68,22 @@ export default function StudyDetail({ study }: StudyDetailProps) {
   const handleOutsideClick = (e: MouseEvent) => {
     if (e.target === e.currentTarget) {
       setModalOpen(false)
+    }
+  }
+
+  const handleEdit = () => {
+    router.push(`/edit/study/${study.id}`)
+  }
+
+  const handleDelete = async () => {
+    try {
+      await deleteStudy(study.id)
+      notify('success', '스터디 삭제 성공!')
+      router.push('/study')
+    } catch (error) {
+      notify('error', '스터디 삭제에 실패했습니다.')
+      console.error('스터디 삭제 오류:', error)
+      throw error
     }
   }
 
@@ -78,7 +106,9 @@ export default function StudyDetail({ study }: StudyDetailProps) {
       </div>
 
       <div className="flex items-center justify-between py-2">
-        <span className="text-primary text-lg">📅 {study.deadline} 까지</span>
+        <span className="text-primary text-lg">
+          📅 {study.deadline.split('T')[0]} 까지
+        </span>
         <div className="flex items-center gap-4 text-sm text-gray-500">
           <button
             onClick={toggleLike}
@@ -100,17 +130,32 @@ export default function StudyDetail({ study }: StudyDetailProps) {
 
       <div className="border-t pt-10">
         <h2 className="mb-2 text-2xl font-semibold">📄 프로젝트 설명</h2>
-        <p className="text-custom-gray-200 max-h-100 overflow-y-auto">
+        <div className="text-custom-gray-200 max-h-100 overflow-y-auto">
           <div className="bg-custom-gray-300 rounded-lg p-6">
-            {study.description}
+            {formatTextWithLineBreaks(study.description)}
           </div>
-        </p>
+        </div>
       </div>
 
       <div className="mt-6 text-center">
-        <Button type="primary" className="max-w-100" onClick={handleAccept}>
-          신청하기
-        </Button>
+        {isAuthor ? (
+          <div className="flex items-center justify-center gap-4">
+            <Button type="secondary" className="max-w-100" onClick={handleEdit}>
+              편집하기
+            </Button>
+            <Button
+              type="tertiary"
+              className="max-w-100"
+              onClick={handleDelete}
+            >
+              삭제하기
+            </Button>
+          </div>
+        ) : (
+          <Button type="primary" className="max-w-100" onClick={handleAccept}>
+            신청하기
+          </Button>
+        )}
       </div>
       {modalOpen && (
         <div
