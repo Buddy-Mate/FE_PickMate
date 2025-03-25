@@ -1,3 +1,9 @@
+export type StudyDataResponse = {
+  title: string
+  description: string
+  deadline: string
+}
+
 export type Study = {
   id: number
   title: string

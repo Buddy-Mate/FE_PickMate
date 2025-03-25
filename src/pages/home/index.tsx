@@ -22,7 +22,7 @@ type HomeProps = {
   user: User
 }
 
-export default function Home({ projects, user }: HomeProps) {
+export default function HomePage({ projects, user }: HomeProps) {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6
   const totalPages = Math.ceil(projects.length / itemsPerPage)
