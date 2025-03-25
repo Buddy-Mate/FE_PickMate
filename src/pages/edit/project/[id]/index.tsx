@@ -26,15 +26,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { notFound: true }
   }
 
-  const accessToken = await getCookie('accessToken', {
-    req: context.req,
-    res: context.res,
-  })
-
-  const project = await getProjectById(
-    Number(context.params.id),
-    accessToken || '',
-  )
+  const project = await getProjectById(Number(context.params.id))
 
   return {
     props: {

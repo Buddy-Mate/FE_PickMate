@@ -9,8 +9,8 @@ import eyeVisible from '@/assets/icons/eyeVisible.png'
 import { Study } from '@/types/study'
 import { deleteStudy, getStudyById } from '@/libs/apis/study'
 import { useAuthStore } from '@/store/authStore'
-import { useRouter } from 'next/navigation'
 import { notify } from '@/components/Toast'
+import { useRouter } from 'next/router'
 
 // 줄바꿈
 const formatTextWithLineBreaks = (text: string) => {
@@ -72,14 +72,14 @@ export default function StudyDetail({ study }: StudyDetailProps) {
   }
 
   const handleEdit = () => {
-    router.push(`edit/${study.id}`)
+    router.push(`/edit/study/${study.id}`)
   }
 
   const handleDelete = async () => {
     try {
       await deleteStudy(study.id)
-      notify('success', '스터디 삭제 성공!.')
-      router.push('/home')
+      notify('success', '스터디 삭제 성공!')
+      router.push('/study')
     } catch (error) {
       notify('error', '스터디 삭제에 실패했습니다.')
       console.error('스터디 삭제 오류:', error)
@@ -130,11 +130,11 @@ export default function StudyDetail({ study }: StudyDetailProps) {
 
       <div className="border-t pt-10">
         <h2 className="mb-2 text-2xl font-semibold">📄 프로젝트 설명</h2>
-        <p className="text-custom-gray-200 max-h-100 overflow-y-auto">
+        <div className="text-custom-gray-200 max-h-100 overflow-y-auto">
           <div className="bg-custom-gray-300 rounded-lg p-6">
             {formatTextWithLineBreaks(study.description)}
           </div>
-        </p>
+        </div>
       </div>
 
       <div className="mt-6 text-center">
