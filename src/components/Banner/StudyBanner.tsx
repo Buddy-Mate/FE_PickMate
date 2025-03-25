@@ -7,7 +7,7 @@ export default function StudyBanner() {
   const router = useRouter()
 
   const handleAddProject = () => {
-    router.push('/addStudy')
+    router.push('/add/study')
   }
   return (
     <div className="flex justify-center bg-black">

@@ -7,7 +7,7 @@ export default function ProjectBanner() {
   const router = useRouter()
 
   const handleAddProject = () => {
-    router.push('/addProject')
+    router.push('/add/project')
   }
   return (
     <div className="flex justify-center bg-black">
