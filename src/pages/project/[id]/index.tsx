@@ -28,15 +28,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { notFound: true }
   }
 
-  const accessToken = await getCookie('accessToken', {
-    req: context.req,
-    res: context.res,
-  })
-
-  const project = await getProjectById(
-    Number(context.params.id),
-    accessToken || '',
-  )
+  const project = await getProjectById(Number(context.params.id))
 
   return {
     props: {
@@ -87,7 +79,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
   const handleDelete = async () => {
     try {
       await deleteProject(project.id)
-      notify('success', '프로젝트가 삭제 성공!.')
+      notify('success', '프로젝트 삭제 성공!.')
       router.push('/home')
     } catch (error) {
       notify('error', '프로젝트 삭제에 실패했습니다.')

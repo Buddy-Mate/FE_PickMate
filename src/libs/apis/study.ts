@@ -24,13 +24,9 @@ export const getAllStudies = async () => {
 }
 
 // 단일 스터디 조회 (READ)
-export const getStudyById = async (id: number, accessToken: string) => {
+export const getStudyById = async (id: number) => {
   try {
-    const response = await axiosInstance.get(`/studies/${id}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
+    const response = await axiosInstance.get(`/studies/${id}`)
     return response.data
   } catch (error) {
     console.error('단일 스터디 조회 실패:', error)

@@ -24,13 +24,9 @@ export const getAllProjects = async () => {
 }
 
 // 단일 프로젝트 조회 (READ)
-export const getProjectById = async (id: number, accessToken: string) => {
+export const getProjectById = async (id: number) => {
   try {
-    const response = await axiosInstance.get(`/projects/${id}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
+    const response = await axiosInstance.get(`/projects/${id}`)
     return response.data
   } catch (error) {
     console.error('단일 프로젝트 조회 실패:', error)
