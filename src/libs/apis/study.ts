@@ -2,7 +2,7 @@ import axiosInstance from '../axiosInstance'
 import { StudyDataResponse } from '@/types/study'
 
 // 스터디 생성 (CREATE)
-export const createStudies = async (data: StudyDataResponse) => {
+export const createStudy = async (data: StudyDataResponse) => {
   try {
     const response = await axiosInstance.post('/studies/addStudy', data)
     return response.data
