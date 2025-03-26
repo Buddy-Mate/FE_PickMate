@@ -26,7 +26,7 @@ export const login = async (data: LoginResponse) => {
 // 사용자 정보 GET
 export const getUserData = async (accessToken: string) => {
   try {
-    const response = await axiosInstance.get('/auth/my', {
+    const response = await axiosInstance.get('/my/info', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
