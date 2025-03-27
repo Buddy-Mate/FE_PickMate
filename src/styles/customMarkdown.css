@@ -1,0 +1,60 @@
+.markdown-preview {
+  height: 400px;
+  background-color: #21212a;
+  color: #f1f1f5;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-y: auto;
+}
+
+.markdown-preview h1 {
+  font-size: 2em;
+  margin: 0.2em 0;
+}
+
+.markdown-preview h2 {
+  font-size: 1.5em;
+  margin: 0.2em 0;
+}
+
+.markdown-preview h3 {
+  font-size: 1.25em;
+  margin: 0.2em 0;
+}
+
+/* 코드 배경색 */
+.markdown-preview code {
+  background-color: #6e6e82;
+  padding: 2px 4px;
+  border-radius: 8px;
+}
+
+/* 코드 블록 배경색 */
+.markdown-preview pre {
+  background-color: #6e6e82;
+  padding: 16px;
+  border-radius: 8px;
+  overflow: auto;
+  margin: 0.5em 0;
+}
+
+.markdown-preview blockquote {
+  border-left: 4px solid #5363ff;
+  padding-left: 16px;
+  color: #5097fa;
+  margin: 1em 0;
+}
+
+.markdown-preview ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.markdown-preview ol {
+  list-style-type: decimal;
+  padding-left: 20px;
+}
+
+.markdown-preview li {
+  margin-bottom: 0.5em;
+}

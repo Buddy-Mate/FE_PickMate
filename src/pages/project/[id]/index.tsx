@@ -11,16 +11,8 @@ import { deleteProject, getProjectById } from '@/libs/apis/project'
 import { useAuthStore } from '@/store/authStore'
 import { useRouter } from 'next/router'
 import { notify } from '@/components/Toast'
-
-// 줄바꿈
-const formatTextWithLineBreaks = (text: string) => {
-  return text.split('\n').map((line, index) => (
-    <span key={index}>
-      {line}
-      <br />
-    </span>
-  ))
-}
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!context.params?.id) {
@@ -130,9 +122,11 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
 
       <div className="border-t pt-10">
         <h2 className="mb-2 text-2xl font-semibold">📄 프로젝트 설명</h2>
-        <div className="text-custom-gray-200 max-h-100 overflow-y-auto">
-          <div className="bg-custom-gray-300 rounded-lg p-6">
-            {formatTextWithLineBreaks(project.description)}
+        <div className="text-custom-gray-200 max-h-150 overflow-y-auto">
+          <div className="markdown-preview">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {project.description}
+            </ReactMarkdown>
           </div>
         </div>
       </div>
