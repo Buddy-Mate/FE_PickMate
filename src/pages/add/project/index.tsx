@@ -17,6 +17,8 @@ import { useRouter } from 'next/router'
 import { createProject } from '@/libs/apis/project'
 import Loading from '@/components/Loading'
 import { notify } from '@/components/Toast'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 type FormData = {
   title: string
@@ -40,6 +42,8 @@ export default function AddProject() {
   const [stacks, setStacks] = useState<string[]>([])
   const [stackTag, setStackTag] = useState('')
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+
+  const [description, setDescription] = useState('')
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -112,11 +116,21 @@ export default function AddProject() {
         </div>
         <div className="flex flex-col gap-2">
           <label className="text-xl font-semibold">📝 내용</label>
-          <textarea
-            {...register('description')}
-            placeholder="어떤 개발자를 모집하고 싶은지, 구현하고 싶은 기능이나 목표 등을 작성해주세요"
-            className="text-custom-white focus:border-custom-white border-custom-gray-200 h-100 resize-none rounded-lg border-2 bg-transparent px-4 py-3 outline-none"
-          />
+          <div className="flex w-full flex-col items-start justify-center gap-2 md:flex-row">
+            <textarea
+              {...register('description')}
+              onChange={(e) => {
+                setDescription(e.target.value)
+              }}
+              placeholder="어떤 개발자를 모집하고 싶은지, 구현하고 싶은 기능이나 목표 등을 작성해주세요"
+              className="text-custom-white focus:border-custom-white border-custom-gray-200 h-100 w-full resize-none rounded-lg border-2 bg-transparent px-4 py-3 outline-none md:w-1/2"
+            />
+            <div className="markdown-preview w-full md:w-1/2">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {description}
+              </ReactMarkdown>
+            </div>
+          </div>
           {errors.description && (
             <p className="text-custom-red">{errors.description.message}</p>
           )}
