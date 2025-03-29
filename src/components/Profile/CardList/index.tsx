@@ -47,8 +47,8 @@ export default function CardList({
       {tab === 'project'
         ? currentData.map((item) => (
             <ProjectCard
-              type={type}
               key={item.id}
+              type={type}
               id={item.id}
               title={item.title}
               likes={item.likes}
@@ -58,8 +58,8 @@ export default function CardList({
           ))
         : currentData.map((item) => (
             <StudyCard
-              type={type}
               key={item.id}
+              type={type}
               id={item.id}
               title={item.title}
               likes={item.likes}
