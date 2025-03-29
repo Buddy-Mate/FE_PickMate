@@ -13,6 +13,7 @@ import { notify } from '@/components/Toast'
 import { useRouter } from 'next/router'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { applyStudy } from '@/libs/apis/apply'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!context.params?.id) {
@@ -53,8 +54,15 @@ export default function StudyDetail({ study }: StudyDetailProps) {
     setModalOpen(true)
   }
 
-  const handleModalSubmit = () => {
-    setModalOpen(false)
+  const handleModalSubmit = async () => {
+    try {
+      await applyStudy(study.id, message)
+      setModalOpen(false)
+      notify('success', '스터디 신청 완료!')
+      router.push('/my')
+    } catch (error) {
+      console.error('스터디 신청 실패:', error)
+    }
   }
 
   const handleOutsideClick = (e: MouseEvent) => {

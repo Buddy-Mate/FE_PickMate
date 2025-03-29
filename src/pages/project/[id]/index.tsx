@@ -50,18 +50,19 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
     setLikeCount((prev) => (liked ? prev - 1 : prev + 1))
   }
 
-  const handleAccept = async () => {
+  const handleAccept = () => {
+    setModalOpen(true)
+  }
+
+  const handleModalSubmit = async () => {
     try {
-      setModalOpen(true)
-      const result = await applyProject(project.id, message)
-      console.log('프로젝트 신청 결과:', result)
+      await applyProject(project.id, message)
+      setModalOpen(false)
+      notify('success', '프로젝트 신청 완료!')
+      router.push('/my')
     } catch (error) {
       console.error('프로젝트 신청 실패:', error)
     }
-  }
-
-  const handleModalSubmit = () => {
-    setModalOpen(false)
   }
 
   const handleOutsideClick = (e: MouseEvent) => {
