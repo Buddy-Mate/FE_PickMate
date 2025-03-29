@@ -1,5 +1,4 @@
 import Button from '@/components/Button'
-import Link from 'next/link'
 import { MouseEvent, useState } from 'react'
 
 type ProjectCardProps = {
@@ -12,8 +11,6 @@ type ProjectCardProps = {
 }
 
 export default function AppliedProjectCard({
-  applicantNickname,
-  applicationId,
   message,
   projectTitle,
   status,
