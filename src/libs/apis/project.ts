@@ -63,3 +63,14 @@ export const deleteProject = async (id: number) => {
     throw error
   }
 }
+
+// 내가 작성한 프로젝트 목록 조회
+export const getMyProjects = async () => {
+  try {
+    const response = await axiosInstance.get('/my/projects')
+    return response.data
+  } catch (error) {
+    console.error('내가 작성한 프로젝트 목록 조회 실패:', error)
+    throw error
+  }
+}

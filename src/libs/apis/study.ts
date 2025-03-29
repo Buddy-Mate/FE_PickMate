@@ -63,3 +63,14 @@ export const deleteStudy = async (id: number) => {
     throw error
   }
 }
+
+// 내가 작성한 스터디 목록 조회
+export const getMyStudies = async () => {
+  try {
+    const response = await axiosInstance.get('/my/studies')
+    return response.data
+  } catch (error) {
+    console.error('내가 작성한 스터디 목록 조회 실패:', error)
+    throw error
+  }
+}

@@ -1,47 +1,77 @@
+import { Project } from '@/types/project'
 import ProjectCard from './ProjectCard'
 import StudyCard from './StudyCard'
+import { Study } from '@/types/study'
+import { useState } from 'react'
+import Pagination from '@/components/Pagination'
 
 type CardListProps = {
   tab: 'project' | 'study'
   type: 'register' | 'apply'
+  projects?: Project[]
+  studies?: Study[]
 }
 
-export default function CardList({ tab, type }: CardListProps) {
-  // 가짜 데이터 예시
-  const dummyData = {
-    register: {
-      project: [
-        {
-          id: 1,
-          title: '등록한 프로젝트 1',
-          applicant: '홍길동',
-          message: '열심히 하겠습니다',
-          status: '대기중',
-        },
-      ],
-      study: [
-        {
-          id: 1,
-          title: '등록한 스터디 1',
-          applicant: '김철수',
-          message: '같이 해요!',
-          status: '대기중',
-        },
-      ],
-    },
-    apply: {
-      project: [{ id: 2, title: '신청한 프로젝트 1', status: '대기중' }],
-      study: [{ id: 2, title: '신청한 스터디 1', status: '대기중' }],
-    },
-  }
+export default function CardList({
+  tab,
+  projects,
+  studies,
+  type,
+}: CardListProps) {
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 2
 
-  const data = dummyData[type][tab]
+  const data = tab === 'project' ? projects : studies
+
+  if (!data || data.length === 0) {
+    if (type === 'register') {
+      return (
+        <div className="mt-20 flex items-center justify-center p-10">
+          <p className="text-gray-500">아직 등록한 글이 없습니다.</p>
+        </div>
+      )
+    } else {
+      return (
+        <div className="mt-20 flex items-center justify-center p-10">
+          <p className="text-gray-500">아직 지원한 내역이 없습니다.</p>
+        </div>
+      )
+    }
+  }
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const currentData = data.slice(startIndex, startIndex + itemsPerPage)
+  const totalPages = Math.ceil((data.length || 0) / itemsPerPage)
 
   return (
     <div className="mt-4 space-y-4">
       {tab === 'project'
-        ? data.map((item) => <ProjectCard key={item.id} {...item} />)
-        : data.map((item) => <StudyCard key={item.id} {...item} />)}
+        ? currentData.map((item) => (
+            <ProjectCard
+              type={type}
+              key={item.id}
+              id={item.id}
+              title={item.title}
+              likes={item.likes}
+              views={item.views}
+              deadline={item.deadline}
+            />
+          ))
+        : currentData.map((item) => (
+            <StudyCard
+              type={type}
+              key={item.id}
+              id={item.id}
+              title={item.title}
+              likes={item.likes}
+              views={item.views}
+              deadline={item.deadline}
+            />
+          ))}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   )
 }
