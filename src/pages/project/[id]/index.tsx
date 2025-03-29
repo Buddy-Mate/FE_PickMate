@@ -11,6 +11,7 @@ import { deleteProject, getProjectById } from '@/libs/apis/project'
 import { useAuthStore } from '@/store/authStore'
 import { useRouter } from 'next/router'
 import { notify } from '@/components/Toast'
+import { applyProject } from '@/libs/apis/apply'
 
 // 줄바꿈
 const formatTextWithLineBreaks = (text: string) => {
@@ -57,8 +58,14 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
     setLikeCount((prev) => (liked ? prev - 1 : prev + 1))
   }
 
-  const handleAccept = () => {
-    setModalOpen(true)
+  const handleAccept = async () => {
+    try {
+      setModalOpen(true)
+      const result = await applyProject(project.id, message)
+      console.log('프로젝트 신청 결과:', result)
+    } catch (error) {
+      console.error('프로젝트 신청 실패:', error)
+    }
   }
 
   const handleModalSubmit = () => {
