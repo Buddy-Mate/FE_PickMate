@@ -1,51 +1,34 @@
 import { useCallback, useEffect, useState } from 'react'
-import CardList from './CardList'
 import { getAppliedProjects, getAppliedStudies } from '@/libs/apis/apply'
-import { getMyProjects } from '@/libs/apis/project'
-import { getMyStudies } from '@/libs/apis/study'
+import AppliedCardList from './AppliedCardList'
 
-type TabProps = {
-  type: 'register' | 'apply'
-}
-
-export default function MyTab({ type }: TabProps) {
+export default function MyAppliedSection() {
   const [activeTab, setActiveTab] = useState<'project' | 'study'>('project')
-
   const [projects, setProjects] = useState([])
   const [studies, setStudies] = useState([])
 
   const getData = useCallback(async () => {
     try {
-      if (type === 'register') {
-        if (activeTab === 'project') {
-          const data = await getMyProjects()
-          setProjects(data)
-        } else if (activeTab === 'study') {
-          const data = await getMyStudies()
-          setStudies(data)
-        }
-      } else if (type === 'apply') {
-        if (activeTab === 'project') {
-          const data = await getAppliedProjects()
-          console.log(data)
-          setProjects(data)
-        } else if (activeTab === 'study') {
-          const data = await getAppliedStudies()
-          setStudies(data)
-        }
+      if (activeTab === 'project') {
+        const data = await getAppliedProjects()
+        console.log(data)
+        setProjects(data)
+      } else if (activeTab === 'study') {
+        const data = await getAppliedStudies()
+        setStudies(data)
       }
     } catch (error) {
       console.error('데이터 불러오기 실패:', error)
     }
-  }, [type, activeTab])
+  }, [activeTab])
 
-  // `type`이나 `activeTab`이 변경될 때마다 데이터 불러오기
   useEffect(() => {
     getData()
   }, [getData])
 
   return (
-    <div className="flex flex-col">
+    <div className="mt-8">
+      <h2 className="my-4 text-2xl font-semibold">🤝 내가 신청한</h2>
       <div className="flex w-full">
         {['project', 'study'].map((tab) => (
           <button
@@ -67,9 +50,9 @@ export default function MyTab({ type }: TabProps) {
 
       <div className="w-full">
         {activeTab === 'project' ? (
-          <CardList tab={activeTab} type={type} projects={projects} />
+          <AppliedCardList tab={activeTab} projects={projects} />
         ) : (
-          <CardList tab={activeTab} type={type} studies={studies} />
+          <AppliedCardList tab={activeTab} studies={studies} />
         )}
       </div>
     </div>
