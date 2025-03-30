@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import ProjectBanner from '@/components/Banner/ProjectBanner'
 import Dropdown from '@/components/Dropdown'
 import Pagination from '@/components/Pagination'
@@ -23,6 +24,9 @@ type HomeProps = {
 }
 
 export default function HomePage({ projects, user }: HomeProps) {
+  const [sortedProjects, setSortedProjects] = useState<Project[]>(projects)
+  const [sortOption, setSortOption] = useState('최신순')
+
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6
   const totalPages = Math.ceil(projects.length / itemsPerPage)
@@ -35,17 +39,41 @@ export default function HomePage({ projects, user }: HomeProps) {
     }
   }, [user, setUser])
 
+  const handleSortChange = (option: string) => {
+    setSortOption(option)
+    const sorted = [...projects]
+
+    switch (option) {
+      case '최신순':
+        sorted.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        )
+        break
+      case '좋아요순':
+        sorted.sort((a, b) => b.likes - a.likes)
+        break
+      case '조회순':
+        sorted.sort((a, b) => b.views - a.views)
+        break
+      default:
+        break
+    }
+
+    setSortedProjects(sorted)
+  }
+
   return (
     <div>
       <ProjectBanner />
       <div className="mx-auto w-full max-w-[1200px] px-10 py-10">
         <div className="flex items-center justify-start gap-4 py-10">
-          <Dropdown />
+          <Dropdown onSelect={handleSortChange} />
           <SearchBar />
         </div>
         <ProjectList
           currentPage={currentPage}
-          projects={projects}
+          projects={sortedProjects}
           itemsPerPage={itemsPerPage}
         />
         <Pagination
