@@ -1,6 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
 
-export default function Dropdown() {
+type DropdownProps = {
+  onSelect: (option: string) => void
+}
+
+export default function Dropdown({ onSelect }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState('최신순')
 
@@ -14,6 +18,7 @@ export default function Dropdown() {
 
   const selectOption = (option: string) => {
     setSelectedOption(option)
+    onSelect(option)
     setIsOpen(false)
   }
 
@@ -38,10 +43,12 @@ export default function Dropdown() {
   return (
     <div
       ref={dropdownRef}
-      onClick={toggleDropdown}
       className="bg-custom-gray-300 border-custom-gray-200 text-custom-white relative flex cursor-pointer rounded-lg border px-4 py-2"
     >
-      <div className="flex w-full cursor-pointer items-center justify-between">
+      <div
+        onClick={toggleDropdown}
+        className="flex w-full cursor-pointer items-center justify-between"
+      >
         <span className="text-white">{selectedOption}</span>
         <span className="ml-2">{isOpen ? '🔼' : '🔽'}</span>
       </div>
