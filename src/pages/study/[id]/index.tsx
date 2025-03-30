@@ -130,7 +130,7 @@ export default function StudyDetail({ study }: StudyDetailProps) {
 
       <div className="border-t pt-10">
         <h2 className="mb-2 text-2xl font-semibold">📄 프로젝트 설명</h2>
-        <div className="text-custom-gray-200 max-h-100 overflow-y-auto">
+        <div className="text-custom-gray-200 min-h-100">
           <div className="markdown-preview">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {study.description}
