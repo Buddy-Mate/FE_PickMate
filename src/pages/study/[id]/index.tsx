@@ -45,6 +45,8 @@ export default function StudyDetail({ study }: StudyDetailProps) {
   const [message, setMessage] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
 
+  const [isClosed, setIsClosed] = useState(false)
+
   const router = useRouter()
 
   // 이미 신청한 스터디인지 확인
@@ -65,6 +67,17 @@ export default function StudyDetail({ study }: StudyDetailProps) {
       checkIfApplied()
     }
   }, [user, study.title, checkIfApplied])
+
+  // 스터디디 마감일 체크
+  useEffect(() => {
+    const deadlineDate = new Date(study.deadline)
+    const currentDate = new Date()
+
+    // 마감일이 지나면 마감 처리
+    if (currentDate > deadlineDate) {
+      setIsClosed(true)
+    }
+  }, [study.deadline])
 
   const toggleLike = () => {
     setLiked((prev) => !prev)
@@ -152,7 +165,7 @@ export default function StudyDetail({ study }: StudyDetailProps) {
       <div className="border-t pt-10">
         <h2 className="mb-2 text-2xl font-semibold">📄 프로젝트 설명</h2>
         <div className="text-custom-gray-200 min-h-100">
-          <div className="markdown-preview">
+          <div className="markdown-preview min-h-100">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {study.description}
             </ReactMarkdown>
@@ -174,6 +187,10 @@ export default function StudyDetail({ study }: StudyDetailProps) {
               삭제하기
             </Button>
           </div>
+        ) : isClosed ? (
+          <Button type="tertiary" className="max-w-100" disabled>
+            마감되었어요.
+          </Button>
         ) : hasApplied ? (
           <Button type="tertiary" className="max-w-100" disabled>
             이미 신청했어요.

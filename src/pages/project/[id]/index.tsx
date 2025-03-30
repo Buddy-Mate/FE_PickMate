@@ -46,6 +46,8 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
   const [message, setMessage] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
 
+  const [isClosed, setIsClosed] = useState(false)
+
   const router = useRouter()
 
   // 이미 신청한 프로젝트인지 확인
@@ -66,6 +68,17 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       checkIfApplied()
     }
   }, [user, project.title, checkIfApplied])
+
+  // 프로젝트 마감일 체크
+  useEffect(() => {
+    const deadlineDate = new Date(project.deadline)
+    const currentDate = new Date()
+
+    // 마감일이 지나면 마감 처리
+    if (currentDate > deadlineDate) {
+      setIsClosed(true)
+    }
+  }, [project.deadline])
 
   const toggleLike = () => {
     setLiked((prev) => !prev)
@@ -153,7 +166,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       <div className="border-t pt-10">
         <h2 className="mb-2 text-2xl font-semibold">📄 프로젝트 설명</h2>
         <div className="text-custom-gray-200 min-h-100">
-          <div className="markdown-preview">
+          <div className="markdown-preview min-h-100">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {project.description}
             </ReactMarkdown>
@@ -189,6 +202,10 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
               삭제하기
             </Button>
           </div>
+        ) : isClosed ? (
+          <Button type="tertiary" className="max-w-100" disabled>
+            마감되었어요.
+          </Button>
         ) : hasApplied ? (
           <Button type="tertiary" className="max-w-100" disabled>
             이미 신청했어요.
