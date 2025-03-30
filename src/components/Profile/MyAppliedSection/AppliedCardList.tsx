@@ -2,17 +2,7 @@ import { useState } from 'react'
 import AppliedProjectCard from './AppliedProjectCard'
 import AppliedStudyCard from './AppliedStudyCard'
 import Pagination from '@/components/Pagination'
-
-type Applicant = {
-  applicantNickname: string
-  applicationId: number
-  createdAt: string
-  message: string
-  openLink: string
-  projectTitle: string
-  studyTitle: string
-  status: 'PENDING' | 'ACCEPTED' | 'REJECTED'
-}
+import { Applicant } from '@/types/apply'
 
 type AppliedCardListProps = {
   tab: 'project' | 'study'

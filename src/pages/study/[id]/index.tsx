@@ -2,7 +2,7 @@ import { GetServerSidePropsContext } from 'next'
 import Image from 'next/image'
 import profile from '@/assets/icons/profile.png'
 import Button from '@/components/Button'
-import { MouseEvent, useState } from 'react'
+import { MouseEvent, useCallback, useEffect, useState } from 'react'
 import heartEmpty from '@/assets/icons/heartEmpty.png'
 import heartFill from '@/assets/icons/heartFill.png'
 import eyeVisible from '@/assets/icons/eyeVisible.png'
@@ -13,7 +13,8 @@ import { notify } from '@/components/Toast'
 import { useRouter } from 'next/router'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { applyStudy } from '@/libs/apis/apply'
+import { applyStudy, getAppliedStudies } from '@/libs/apis/apply'
+import { Applicant } from '@/types/apply'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!context.params?.id) {
@@ -36,6 +37,7 @@ type StudyDetailProps = {
 export default function StudyDetail({ study }: StudyDetailProps) {
   const { user } = useAuthStore()
   const isAuthor = user?.nickname === study.authorNickname
+  const [hasApplied, setHasApplied] = useState(false)
 
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(study.likes)
@@ -44,6 +46,25 @@ export default function StudyDetail({ study }: StudyDetailProps) {
   const [modalOpen, setModalOpen] = useState(false)
 
   const router = useRouter()
+
+  // 이미 신청한 스터디인지 확인
+  const checkIfApplied = useCallback(async () => {
+    try {
+      const appliedStudies: Applicant[] = await getAppliedStudies()
+      const isAlreadyApplied = appliedStudies.some(
+        (appliedStudy) => appliedStudy.studyTitle === study.title,
+      )
+      setHasApplied(isAlreadyApplied)
+    } catch (error) {
+      console.error('신청 여부 확인 실패:', error)
+    }
+  }, [study.title])
+
+  useEffect(() => {
+    if (user) {
+      checkIfApplied()
+    }
+  }, [user, study.title, checkIfApplied])
 
   const toggleLike = () => {
     setLiked((prev) => !prev)
@@ -153,6 +174,10 @@ export default function StudyDetail({ study }: StudyDetailProps) {
               삭제하기
             </Button>
           </div>
+        ) : hasApplied ? (
+          <Button type="tertiary" className="max-w-100" disabled>
+            이미 신청했어요.
+          </Button>
         ) : (
           <Button type="primary" className="max-w-100" onClick={handleAccept}>
             신청하기

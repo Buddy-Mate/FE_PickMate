@@ -5,6 +5,7 @@ import {
   getStudyApplicants,
   rejectStudyApplication,
 } from '@/libs/apis/apply'
+import { Applicant } from '@/types/apply'
 import Link from 'next/link'
 import { MouseEvent, useState, useEffect, useCallback } from 'react'
 
@@ -15,13 +16,6 @@ type StudyCardProps = {
   views: number
   deadline: string
   status?: string
-}
-
-type Applicant = {
-  applicantNickname: string
-  applicationId: number
-  message: string
-  status: 'PENDING' | 'ACCEPTED' | 'REJECTED'
 }
 
 export default function RegisteredStudyCard({

@@ -3,7 +3,7 @@ import { Project } from '@/types/project'
 import Image from 'next/image'
 import profile from '@/assets/icons/profile.png'
 import Button from '@/components/Button'
-import { MouseEvent, useState } from 'react'
+import { MouseEvent, useCallback, useEffect, useState } from 'react'
 import heartEmpty from '@/assets/icons/heartEmpty.png'
 import heartFill from '@/assets/icons/heartFill.png'
 import eyeVisible from '@/assets/icons/eyeVisible.png'
@@ -11,9 +11,10 @@ import { deleteProject, getProjectById } from '@/libs/apis/project'
 import { useAuthStore } from '@/store/authStore'
 import { useRouter } from 'next/router'
 import { notify } from '@/components/Toast'
-import { applyProject } from '@/libs/apis/apply'
+import { applyProject, getAppliedProjects } from '@/libs/apis/apply'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { Applicant } from '@/types/apply'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!context.params?.id) {
@@ -34,8 +35,10 @@ type ProjectDetailProps = {
 }
 
 export default function ProjectDetail({ project }: ProjectDetailProps) {
+  console.log(project)
   const { user } = useAuthStore()
   const isAuthor = user?.nickname === project.authorNickname
+  const [hasApplied, setHasApplied] = useState(false)
 
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(project.likes)
@@ -44,6 +47,25 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
   const [modalOpen, setModalOpen] = useState(false)
 
   const router = useRouter()
+
+  // 이미 신청한 프로젝트인지 확인
+  const checkIfApplied = useCallback(async () => {
+    try {
+      const appliedProjects: Applicant[] = await getAppliedProjects()
+      const isAlreadyApplied = appliedProjects.some(
+        (appliedProject) => appliedProject.projectTitle === project.title,
+      )
+      setHasApplied(isAlreadyApplied)
+    } catch (error) {
+      console.error('신청 여부 확인 실패:', error)
+    }
+  }, [project.title])
+
+  useEffect(() => {
+    if (user) {
+      checkIfApplied()
+    }
+  }, [user, project.title, checkIfApplied])
 
   const toggleLike = () => {
     setLiked((prev) => !prev)
@@ -167,6 +189,10 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
               삭제하기
             </Button>
           </div>
+        ) : hasApplied ? (
+          <Button type="tertiary" className="max-w-100" disabled>
+            이미 신청했어요.
+          </Button>
         ) : (
           <Button type="primary" className="max-w-100" onClick={handleAccept}>
             신청하기
