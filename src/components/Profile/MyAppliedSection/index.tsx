@@ -11,7 +11,6 @@ export default function MyAppliedSection() {
     try {
       if (activeTab === 'project') {
         const data = await getAppliedProjects()
-        console.log(data)
         setProjects(data)
       } else if (activeTab === 'study') {
         const data = await getAppliedStudies()

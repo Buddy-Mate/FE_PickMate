@@ -8,7 +8,7 @@ type Applicant = {
   applicationId: number
   createdAt: string
   message: string
-  openLink: null | string
+  openLink: string
   projectTitle: string
   studyTitle: string
   status: 'PENDING' | 'ACCEPTED' | 'REJECTED'
@@ -50,6 +50,7 @@ export default function AppliedCardList({
             message={applicant.message}
             projectTitle={applicant.projectTitle}
             status={applicant.status}
+            openLink={applicant.openLink}
           />
         ) : (
           <AppliedStudyCard
@@ -59,6 +60,7 @@ export default function AppliedCardList({
             message={applicant.message}
             studyTitle={applicant.studyTitle}
             status={applicant.status}
+            openLink={applicant.openLink}
           />
         ),
       )}

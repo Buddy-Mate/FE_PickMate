@@ -32,7 +32,7 @@ export default function RegisteredProjectCard({
   deadline,
   // status,
 }: ProjectCardProps) {
-  const [chatRoomUrl, setChatRoomUrl] = useState('')
+  const [chatRoomUrl, setChatRoomUrl] = useState<string>('')
   const [modalOpen, setModalOpen] = useState(false)
 
   const [applicantsList, setApplicantsList] = useState<Applicant[]>([])
@@ -44,7 +44,6 @@ export default function RegisteredProjectCard({
     if (id) {
       try {
         const data = await getProjectApplicants(id)
-        console.log(data)
         setApplicantsList(data)
       } catch (error) {
         console.error('신청자 데이터 불러오기 실패:', error)
@@ -82,6 +81,7 @@ export default function RegisteredProjectCard({
       notify('error', '채팅방 URL을 입력하세요.')
       return
     }
+
     if (applicationIdToAccept === null) {
       notify('error', '유효하지 않은 신청입니다.')
       return
@@ -98,6 +98,7 @@ export default function RegisteredProjectCard({
       )
 
       setModalOpen(false)
+      setChatRoomUrl('')
       notify('success', '신청을 수락했습니다!')
     } catch (error) {
       notify('error', '신청 수락에 실패했습니다.')

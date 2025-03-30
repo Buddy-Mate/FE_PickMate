@@ -44,7 +44,6 @@ export default function RegisteredStudyCard({
     if (id) {
       try {
         const data = await getStudyApplicants(id)
-        console.log(data)
         setApplicantsList(data)
       } catch (error) {
         console.error('신청자 데이터 불러오기 실패:', error)

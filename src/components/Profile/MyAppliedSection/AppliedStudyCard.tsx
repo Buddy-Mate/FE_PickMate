@@ -1,5 +1,4 @@
 import Button from '@/components/Button'
-import Link from 'next/link'
 import { MouseEvent, useState } from 'react'
 
 type StudyCardProps = {
@@ -8,12 +7,23 @@ type StudyCardProps = {
   message: string
   studyTitle: string
   status: 'PENDING' | 'ACCEPTED' | 'REJECTED'
-  openLink?: string // 오픈 채팅방 링크
+  openLink: string
+}
+
+const getStatusStyle = (status: string) => {
+  switch (status) {
+    case 'PENDING':
+      return { background: 'bg-yellow-400', label: '대기중' }
+    case 'ACCEPTED':
+      return { background: 'bg-blue-400', label: '수락됨' }
+    case 'REJECTED':
+      return { background: 'bg-red-400', label: '거절됨' }
+    default:
+      return { background: 'bg-gray-300', label: '정보 없음' }
+  }
 }
 
 export default function AppliedStudyCard({
-  applicantNickname,
-  applicationId,
   message,
   studyTitle,
   status,
@@ -21,19 +31,13 @@ export default function AppliedStudyCard({
 }: StudyCardProps) {
   const [modalOpen, setModalOpen] = useState(false)
 
-  // 확인하기 버튼
-  const handleAccept = () => {
+  const statusStyle = getStatusStyle(status)
+
+  const handleConfirm = () => {
     setModalOpen(true)
   }
 
-  const handleReject = () => {
-    // 거절 로직 추가 (예: 상태 업데이트)
-  }
-
-  const handleModalSubmit = () => {
-    // 제출 로직 추가 (예: 채팅방 URL 처리)
-    setModalOpen(false)
-  }
+  const handleCancel = () => {}
 
   const handleOutsideClick = (e: MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -42,32 +46,23 @@ export default function AppliedStudyCard({
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-lg border p-4 lg:flex-row">
-      {/* 왼쪽: 프로젝트 정보 */}
-      <Link
-        href={`/Study/${applicationId}`}
-        className="bg-custom-gray-300 flex w-full max-w-100 flex-col items-start justify-start rounded-lg p-4 text-sm transition-all hover:scale-105"
-      >
+    <div className="flex flex-row items-center justify-between gap-4 rounded-lg border p-4">
+      <div>
+        <p
+          className={`mb-2 w-fit rounded-full p-2 text-sm text-white ${statusStyle.background}`}
+        >
+          {statusStyle.label}
+        </p>
         <p className="text-custom-blue text-2xl font-bold">{studyTitle}</p>
-      </Link>
-
-      {/* 오른쪽: 신청자 정보 */}
-      <div className="w-full flex-1 border-t pt-4 md:rounded-tl-lg md:border-l md:pt-0 md:pl-4">
-        <p className="py-2 font-semibold">신청자 정보</p>
-        <div className="bg-custom-gray-300 rounded-lg p-3">
-          <p className="text-custom-white font-semibold">
-            닉네임: {applicantNickname}
-          </p>
-          <p className="text-custom-white text-sm">메시지: {message}</p>
-        </div>
-
-        {/* 상태에 따른 버튼 표시 */}
-        <div className="mt-4 flex justify-end gap-4">
+        <p className="text-custom-white pt-2 text-sm">📝 {message}</p>
+      </div>
+      <div className="flex justify-end gap-4">
+        <div className="flex flex-col items-center">
           {status === 'PENDING' && (
             <Button
               type="tertiary"
-              onClick={handleReject}
-              className="max-w-24 text-sm"
+              onClick={handleCancel}
+              className="max-w-40 text-sm"
             >
               신청 취소
             </Button>
@@ -75,8 +70,8 @@ export default function AppliedStudyCard({
           {status === 'ACCEPTED' && (
             <Button
               type="primary"
-              onClick={handleAccept}
-              className="max-w-24 text-sm"
+              onClick={handleConfirm}
+              className="max-w-40 text-sm"
             >
               쪽지 확인하기
             </Button>
@@ -94,26 +89,21 @@ export default function AppliedStudyCard({
             className="bg-custom-black min-w-100 rounded-lg border-2 p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="mb-4 text-xl font-semibold">오픈 채팅방 링크</h2>
-            {openLink ? (
-              <p className="text-custom-white">{openLink}</p>
+            <h2 className="mb-4 text-xl font-semibold">🖥️ 오픈 채팅방 링크</h2>
+            {openLink && openLink !== '' ? (
+              <p className="text-custom-white rounded-lg border p-2">
+                {openLink}
+              </p>
             ) : (
               <p className="text-gray-500">링크가 없습니다.</p>
             )}
             <div className="mt-4 flex w-full items-center justify-center gap-4">
               <Button
                 type="primary"
-                onClick={handleModalSubmit}
-                className="max-w-30"
-              >
-                확인
-              </Button>
-              <Button
-                type="tertiary"
                 onClick={() => setModalOpen(false)}
                 className="max-w-30"
               >
-                취소
+                확인
               </Button>
             </div>
           </div>
