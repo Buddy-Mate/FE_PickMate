@@ -17,8 +17,9 @@ export default function StudyBanner() {
             src={studyBlack}
             alt="Study 배너"
             priority
-            layout="responsive"
-            objectFit="cover"
+            width={600}
+            height={400}
+            className="h-auto w-full object-cover"
           />
         </div>
 

@@ -2,10 +2,15 @@ import Button from '@/components/Button'
 import { MouseEvent, useState } from 'react'
 
 type StudyCardProps = {
+  type: 'register' | 'apply'
   title: string
+  id: number
+  likes: number
+  views: number
+  deadline: string
+  status?: string
   applicant?: string
   message?: string
-  status: string
 }
 
 export default function ProjectCard({

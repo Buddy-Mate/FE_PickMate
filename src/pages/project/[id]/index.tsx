@@ -11,6 +11,7 @@ import { deleteProject, getProjectById } from '@/libs/apis/project'
 import { useAuthStore } from '@/store/authStore'
 import { useRouter } from 'next/router'
 import { notify } from '@/components/Toast'
+import { applyProject } from '@/libs/apis/apply'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
@@ -53,8 +54,15 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
     setModalOpen(true)
   }
 
-  const handleModalSubmit = () => {
-    setModalOpen(false)
+  const handleModalSubmit = async () => {
+    try {
+      await applyProject(project.id, message)
+      setModalOpen(false)
+      notify('success', '프로젝트 신청 완료!')
+      router.push('/my')
+    } catch (error) {
+      console.error('프로젝트 신청 실패:', error)
+    }
   }
 
   const handleOutsideClick = (e: MouseEvent) => {

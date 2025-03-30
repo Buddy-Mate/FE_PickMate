@@ -1,43 +1,34 @@
 import { Project } from '@/types/project'
-import ProjectCard from './ProjectCard'
-import StudyCard from './StudyCard'
 import { Study } from '@/types/study'
 import { useState } from 'react'
 import Pagination from '@/components/Pagination'
+import RegisteredProjectCard from './RegisteredProjectCard'
+import RegisteredStudyCard from './RegisteredStudyCard'
 
-type CardListProps = {
+type RegisteredCardListProps = {
   tab: 'project' | 'study'
-  type: 'register' | 'apply'
   projects?: Project[]
   studies?: Study[]
 }
 
-export default function CardList({
+export default function RegisteredCardList({
   tab,
   projects,
   studies,
-  type,
-}: CardListProps) {
+}: RegisteredCardListProps) {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 2
 
   const data = tab === 'project' ? projects : studies
 
   if (!data || data.length === 0) {
-    if (type === 'register') {
-      return (
-        <div className="mt-20 flex items-center justify-center p-10">
-          <p className="text-gray-500">아직 등록한 글이 없습니다.</p>
-        </div>
-      )
-    } else {
-      return (
-        <div className="mt-20 flex items-center justify-center p-10">
-          <p className="text-gray-500">아직 지원한 내역이 없습니다.</p>
-        </div>
-      )
-    }
+    return (
+      <div className="mt-20 flex items-center justify-center p-10">
+        <p className="text-gray-500">아직 등록한 글이 없습니다.</p>
+      </div>
+    )
   }
+
   const startIndex = (currentPage - 1) * itemsPerPage
   const currentData = data.slice(startIndex, startIndex + itemsPerPage)
   const totalPages = Math.ceil((data.length || 0) / itemsPerPage)
@@ -46,9 +37,8 @@ export default function CardList({
     <div className="mt-4 space-y-4">
       {tab === 'project'
         ? currentData.map((item) => (
-            <ProjectCard
+            <RegisteredProjectCard
               key={item.id}
-              type={type}
               id={item.id}
               title={item.title}
               likes={item.likes}
@@ -57,9 +47,8 @@ export default function CardList({
             />
           ))
         : currentData.map((item) => (
-            <StudyCard
+            <RegisteredStudyCard
               key={item.id}
-              type={type}
               id={item.id}
               title={item.title}
               likes={item.likes}
