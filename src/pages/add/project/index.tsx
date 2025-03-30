@@ -123,9 +123,9 @@ export default function AddProject() {
                 setDescription(e.target.value)
               }}
               placeholder="어떤 개발자를 모집하고 싶은지, 구현하고 싶은 기능이나 목표 등을 작성해주세요"
-              className="text-custom-white focus:border-custom-white border-custom-gray-200 h-100 w-full resize-none rounded-lg border-2 bg-transparent px-4 py-3 outline-none md:w-1/2"
+              className="text-custom-white focus:border-custom-white border-custom-gray-200 h-100 w-full resize-none rounded-lg border-2 bg-transparent px-4 py-3 outline-none md:h-200 md:w-1/2"
             />
-            <div className="markdown-preview w-full md:w-1/2">
+            <div className="markdown-preview h-100 w-full md:h-200 md:w-1/2">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                 {description}
               </ReactMarkdown>

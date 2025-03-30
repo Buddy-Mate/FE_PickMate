@@ -6,13 +6,12 @@ import SearchBar from '@/components/SearchBar'
 import StudyList from '@/components/StudyList'
 import { getAllStudies } from '@/libs/apis/study'
 import { Study } from '@/types/study'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const studies = await getAllStudies()
   return {
     props: { studies },
-    revalidate: 300, // 5분마다 revalidate
   }
 }
 
@@ -51,6 +50,14 @@ export default function StudyPage({ studies }: StudyProps) {
 
     setSortedStudies(sorted)
   }
+
+  useEffect(() => {
+    const sorted = [...studies].sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    )
+    setSortedStudies(sorted)
+  }, [studies])
 
   return (
     <div>

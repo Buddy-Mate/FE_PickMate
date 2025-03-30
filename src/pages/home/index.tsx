@@ -10,11 +10,10 @@ import { User } from '@/types/auth'
 import { Project } from '@/types/project'
 import { useEffect, useState } from 'react'
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const projects = await getAllProjects()
   return {
     props: { projects },
-    revalidate: 300, // 5분마다 revalidate
   }
 }
 
@@ -62,6 +61,15 @@ export default function HomePage({ projects, user }: HomeProps) {
 
     setSortedProjects(sorted)
   }
+
+  // projects가 변경될 때 최신순으로 정렬
+  useEffect(() => {
+    const sorted = [...projects].sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    )
+    setSortedProjects(sorted)
+  }, [projects])
 
   return (
     <div>

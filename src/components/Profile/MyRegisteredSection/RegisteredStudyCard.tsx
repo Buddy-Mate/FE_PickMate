@@ -5,6 +5,7 @@ import {
   getStudyApplicants,
   rejectStudyApplication,
 } from '@/libs/apis/apply'
+import { Applicant } from '@/types/apply'
 import Link from 'next/link'
 import { MouseEvent, useState, useEffect, useCallback } from 'react'
 
@@ -15,13 +16,6 @@ type StudyCardProps = {
   views: number
   deadline: string
   status?: string
-}
-
-type Applicant = {
-  applicantNickname: string
-  applicationId: number
-  message: string
-  status: 'PENDING' | 'ACCEPTED' | 'REJECTED'
 }
 
 export default function RegisteredStudyCard({
@@ -127,23 +121,21 @@ export default function RegisteredStudyCard({
     <div className="flex flex-col gap-4 rounded-lg border p-4 lg:flex-row">
       {/* 왼쪽: 스터디 정보 */}
       <Link
-        href={`/Study/${id}`}
-        className="bg-custom-gray-300 flex w-full max-w-100 flex-col items-start justify-start rounded-lg p-4 text-sm transition-all hover:scale-105"
+        href={`/study/${id}`}
+        className="bg-custom-gray-300 flex w-full max-w-100 flex-col items-start justify-between rounded-lg p-4 text-sm transition-all hover:scale-105"
       >
         <p className="text-custom-blue text-2xl font-bold">{title}</p>
-        <div className="flex flex-col gap-2">
-          <div className="mt-2 text-sm text-gray-600">
-            <p>
-              <strong>좋아요</strong> {likes}
-            </p>
-            <p>
-              <strong>조회수</strong> {views}
-            </p>
-            <p>
-              <strong>마감일</strong>{' '}
-              {deadline ? deadline.split('T')[0] : '정보 없음'}
-            </p>
-          </div>
+        <div className="mt-2 flex flex-col gap-1 text-sm text-gray-600">
+          <p>
+            <strong>♥️ 좋아요</strong> {likes}
+          </p>
+          <p>
+            <strong>👁️ 조회수</strong> {views}
+          </p>
+          <p>
+            <strong>📅 마감일</strong>{' '}
+            {deadline ? deadline.split('T')[0] : '정보 없음'}
+          </p>
         </div>
       </Link>
 

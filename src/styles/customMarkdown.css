@@ -1,5 +1,4 @@
 .markdown-preview {
-  height: 400px;
   background-color: #21212a;
   color: #f1f1f5;
   padding: 16px;
@@ -9,17 +8,20 @@
 
 .markdown-preview h1 {
   font-size: 2em;
-  margin: 0.2em 0;
+  margin: 1rem 0;
+  font-weight: bold;
 }
 
 .markdown-preview h2 {
   font-size: 1.5em;
-  margin: 0.2em 0;
+  margin: 2rem 0 0.5rem;
+  font-weight: bolder;
 }
 
 .markdown-preview h3 {
   font-size: 1.25em;
-  margin: 0.2em 0;
+  margin: 2rem 0 0.5rem;
+  font-weight: bolder;
 }
 
 /* 코드 배경색 */
