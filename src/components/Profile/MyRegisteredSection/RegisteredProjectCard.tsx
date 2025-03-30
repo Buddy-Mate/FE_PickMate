@@ -124,22 +124,20 @@ export default function RegisteredProjectCard({
       {/* 왼쪽: 프로젝트 정보 */}
       <Link
         href={`/project/${id}`}
-        className="bg-custom-gray-300 flex w-full max-w-100 flex-col items-start justify-start rounded-lg p-4 text-sm transition-all hover:scale-105"
+        className="bg-custom-gray-300 flex w-full max-w-100 flex-col items-start justify-between rounded-lg p-4 text-sm transition-all hover:scale-105"
       >
         <p className="text-custom-blue text-2xl font-bold">{title}</p>
-        <div className="flex flex-col gap-2">
-          <div className="mt-2 text-sm text-gray-600">
-            <p>
-              <strong>좋아요</strong> {likes}
-            </p>
-            <p>
-              <strong>조회수</strong> {views}
-            </p>
-            <p>
-              <strong>마감일</strong>{' '}
-              {deadline ? deadline.split('T')[0] : '정보 없음'}
-            </p>
-          </div>
+        <div className="mt-2 flex flex-col gap-1 text-sm text-gray-600">
+          <p>
+            <strong>♥️ 좋아요</strong> {likes}
+          </p>
+          <p>
+            <strong>👁️ 조회수</strong> {views}
+          </p>
+          <p>
+            <strong>📅 마감일</strong>{' '}
+            {deadline ? deadline.split('T')[0] : '정보 없음'}
+          </p>
         </div>
       </Link>
 
