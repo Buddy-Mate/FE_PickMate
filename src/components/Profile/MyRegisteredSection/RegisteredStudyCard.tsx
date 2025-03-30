@@ -1,5 +1,10 @@
 import Button from '@/components/Button'
-import { getStudyApplicants } from '@/libs/apis/apply'
+import { notify } from '@/components/Toast'
+import {
+  acceptStudyApplication,
+  getStudyApplicants,
+  rejectStudyApplication,
+} from '@/libs/apis/apply'
 import Link from 'next/link'
 import { MouseEvent, useState, useEffect, useCallback } from 'react'
 
@@ -12,30 +17,34 @@ type StudyCardProps = {
   status?: string
 }
 
+type Applicant = {
+  applicantNickname: string
+  applicationId: number
+  message: string
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED'
+}
+
 export default function RegisteredStudyCard({
   title,
   id,
   likes,
   views,
   deadline,
-  status,
+  // status,
 }: StudyCardProps) {
   const [chatRoomUrl, setChatRoomUrl] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
-  const [currentStatus, setCurrentStatus] = useState(status)
-  const [applicantsList, setApplicantsList] = useState<
-    {
-      name: string
-      status: string
-      applicantNickname: string
-      message: string
-    }[]
-  >([])
+
+  const [applicantsList, setApplicantsList] = useState<Applicant[]>([])
+  const [applicationIdToAccept, setApplicationIdToAccept] = useState<
+    number | null
+  >(null)
 
   const getApplicants = useCallback(async () => {
     if (id) {
       try {
         const data = await getStudyApplicants(id)
+        console.log(data)
         setApplicantsList(data)
       } catch (error) {
         console.error('신청자 데이터 불러오기 실패:', error)
@@ -47,21 +56,71 @@ export default function RegisteredStudyCard({
     getApplicants()
   }, [getApplicants])
 
-  const handleAccept = () => {
+  const handleAccept = (applicationId: number) => {
     setModalOpen(true)
+    setApplicationIdToAccept(applicationId)
   }
 
-  const handleReject = () => {
-    setCurrentStatus('거절됨')
+  const handleReject = async (applicationId: number) => {
+    try {
+      await rejectStudyApplication(applicationId)
+      setApplicantsList((prev) =>
+        prev.map((applicant) =>
+          applicant.applicationId === applicationId
+            ? { ...applicant, status: 'REJECTED' }
+            : applicant,
+        ),
+      )
+      notify('success', '지원을 거절했습니다!')
+    } catch (error) {
+      console.error('거절 실패:', error)
+    }
   }
 
-  const handleModalSubmit = () => {
-    setModalOpen(false)
+  const handleModalSubmit = async () => {
+    if (!chatRoomUrl) {
+      notify('error', '채팅방 URL을 입력하세요.')
+      return
+    }
+    if (applicationIdToAccept === null) {
+      notify('error', '유효하지 않은 신청입니다.')
+      return
+    }
+    try {
+      await acceptStudyApplication(applicationIdToAccept, chatRoomUrl)
+
+      setApplicantsList((prev) =>
+        prev.map((applicant) =>
+          applicant.applicationId === applicationIdToAccept
+            ? { ...applicant, status: 'ACCEPTED' }
+            : applicant,
+        ),
+      )
+
+      setModalOpen(false)
+      notify('success', '신청을 수락했습니다!')
+    } catch (error) {
+      notify('error', '신청 수락에 실패했습니다.')
+      console.error('신청 수락 실패:', error)
+    }
   }
 
   const handleOutsideClick = (e: MouseEvent) => {
     if (e.target === e.currentTarget) {
       setModalOpen(false)
+    }
+  }
+
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case 'PENDING':
+        return { background: 'bg-yellow-400', label: '대기중' }
+      case 'ACCEPTED':
+        return { background: 'bg-blue-400', label: '수락됨' }
+      case 'REJECTED':
+        return { background: 'bg-red-400', label: '거절됨' }
+      default:
+        return { background: 'bg-gray-300', label: '정보 없음' }
     }
   }
 
@@ -89,45 +148,54 @@ export default function RegisteredStudyCard({
         </div>
       </Link>
 
-      {/* 오른쪽: 신청자 리스트 또는 상태 */}
+      {/* 오른쪽: 신청자 리스트 */}
       <div className="w-full flex-1 border-t pt-4 md:rounded-tl-lg md:border-l md:pt-0 md:pl-4">
         <p className="py-2 font-semibold">신청자 목록</p>
         <div className="flex h-60 flex-col gap-2 overflow-y-auto">
           {applicantsList.length > 0 ? (
-            applicantsList.map((applicant, index) => (
-              <div
-                key={index}
-                className="bg-custom-gray-300 flex justify-between rounded-lg p-3"
-              >
-                <div>
-                  <p className="bg-custom-yellow mb-2 w-fit rounded-full p-2 text-sm text-white">
-                    {currentStatus}
-                  </p>
-                  <p className="text-custom-white font-semibold">
-                    {applicant.applicantNickname}
-                  </p>
-                  <p className="text-custom-white text-sm">
-                    {applicant.message}
-                  </p>
+            applicantsList.map((applicant, index) => {
+              const statusStyle = getStatusStyle(applicant.status)
+              return (
+                <div
+                  key={index}
+                  className="bg-custom-gray-300 flex justify-between rounded-lg p-3"
+                >
+                  <div>
+                    <p
+                      className={`mb-2 w-fit rounded-full p-2 text-sm text-white ${statusStyle.background}`}
+                    >
+                      {statusStyle.label}
+                    </p>
+                    <p className="text-custom-white font-semibold">
+                      {applicant.applicantNickname}
+                    </p>
+                    <p className="text-custom-white text-sm">
+                      {applicant.message}
+                    </p>
+                  </div>
+                  <div className="flex flex-1 flex-col items-end justify-end gap-4 md:flex-row md:items-center">
+                    {applicant.status === 'PENDING' && (
+                      <>
+                        <Button
+                          type="primary"
+                          onClick={() => handleAccept(applicant.applicationId)}
+                          className="max-w-24 text-sm"
+                        >
+                          수락
+                        </Button>
+                        <Button
+                          type="tertiary"
+                          onClick={() => handleReject(applicant.applicationId)}
+                          className="max-w-24 text-sm"
+                        >
+                          거절
+                        </Button>
+                      </>
+                    )}
+                  </div>
                 </div>
-                <div className="flex flex-1 flex-col items-end justify-end gap-4 md:flex-row md:items-center">
-                  <Button
-                    type="primary"
-                    onClick={handleAccept}
-                    className="max-w-24 text-sm"
-                  >
-                    수락
-                  </Button>
-                  <Button
-                    type="tertiary"
-                    onClick={handleReject}
-                    className="max-w-24 text-sm"
-                  >
-                    거절
-                  </Button>
-                </div>
-              </div>
-            ))
+              )
+            })
           ) : (
             <p className="text-gray-500">신청자가 없습니다.</p>
           )}

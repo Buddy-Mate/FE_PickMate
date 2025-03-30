@@ -1,5 +1,10 @@
 import Button from '@/components/Button'
-import { getProjectApplicants } from '@/libs/apis/apply'
+import { notify } from '@/components/Toast'
+import {
+  acceptProjectApplication,
+  getProjectApplicants,
+  rejectProjectApplication,
+} from '@/libs/apis/apply'
 import Link from 'next/link'
 import { MouseEvent, useState, useEffect, useCallback } from 'react'
 
@@ -14,6 +19,7 @@ type ProjectCardProps = {
 
 type Applicant = {
   applicantNickname: string
+  applicationId: number
   message: string
   status: 'PENDING' | 'ACCEPTED' | 'REJECTED'
 }
@@ -28,7 +34,11 @@ export default function RegisteredProjectCard({
 }: ProjectCardProps) {
   const [chatRoomUrl, setChatRoomUrl] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
+
   const [applicantsList, setApplicantsList] = useState<Applicant[]>([])
+  const [applicationIdToAccept, setApplicationIdToAccept] = useState<
+    number | null
+  >(null)
 
   const getApplicants = useCallback(async () => {
     if (id) {
@@ -46,16 +56,53 @@ export default function RegisteredProjectCard({
     getApplicants()
   }, [getApplicants])
 
-  const handleAccept = () => {
+  const handleAccept = (applicationId: number) => {
     setModalOpen(true)
+    setApplicationIdToAccept(applicationId)
   }
 
-  const handleReject = () => {
-    // 거절 로직 추가
+  const handleReject = async (applicationId: number) => {
+    try {
+      await rejectProjectApplication(applicationId)
+      setApplicantsList((prev) =>
+        prev.map((applicant) =>
+          applicant.applicationId === applicationId
+            ? { ...applicant, status: 'REJECTED' }
+            : applicant,
+        ),
+      )
+      notify('success', '지원을 거절했습니다!')
+    } catch (error) {
+      console.error('거절 실패:', error)
+    }
   }
 
-  const handleModalSubmit = () => {
-    setModalOpen(false)
+  const handleModalSubmit = async () => {
+    if (!chatRoomUrl) {
+      notify('error', '채팅방 URL을 입력하세요.')
+      return
+    }
+    if (applicationIdToAccept === null) {
+      notify('error', '유효하지 않은 신청입니다.')
+      return
+    }
+    try {
+      await acceptProjectApplication(applicationIdToAccept, chatRoomUrl)
+
+      setApplicantsList((prev) =>
+        prev.map((applicant) =>
+          applicant.applicationId === applicationIdToAccept
+            ? { ...applicant, status: 'ACCEPTED' }
+            : applicant,
+        ),
+      )
+
+      setModalOpen(false)
+      notify('success', '신청을 수락했습니다!')
+    } catch (error) {
+      notify('error', '신청 수락에 실패했습니다.')
+      console.error('신청 수락 실패:', error)
+    }
   }
 
   const handleOutsideClick = (e: MouseEvent) => {
@@ -69,7 +116,7 @@ export default function RegisteredProjectCard({
       case 'PENDING':
         return { background: 'bg-yellow-400', label: '대기중' }
       case 'ACCEPTED':
-        return { background: 'bg-green-400', label: '수락됨' }
+        return { background: 'bg-blue-400', label: '수락됨' }
       case 'REJECTED':
         return { background: 'bg-red-400', label: '거절됨' }
       default:
@@ -127,20 +174,24 @@ export default function RegisteredProjectCard({
                     </p>
                   </div>
                   <div className="flex flex-1 flex-col items-end justify-end gap-4 md:flex-row md:items-center">
-                    <Button
-                      type="primary"
-                      onClick={handleAccept}
-                      className="max-w-24 text-sm"
-                    >
-                      수락
-                    </Button>
-                    <Button
-                      type="tertiary"
-                      onClick={handleReject}
-                      className="max-w-24 text-sm"
-                    >
-                      거절
-                    </Button>
+                    {applicant.status === 'PENDING' && (
+                      <>
+                        <Button
+                          type="primary"
+                          onClick={() => handleAccept(applicant.applicationId)}
+                          className="max-w-24 text-sm"
+                        >
+                          수락
+                        </Button>
+                        <Button
+                          type="tertiary"
+                          onClick={() => handleReject(applicant.applicationId)}
+                          className="max-w-24 text-sm"
+                        >
+                          거절
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               )
