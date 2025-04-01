@@ -67,6 +67,19 @@ export const rejectProjectApplication = async (applicationId: number) => {
   }
 }
 
+// 프로젝트 신청 취소
+export const cancelProjectApplication = async (applicationId: number) => {
+  try {
+    const response = await axiosInstance.delete(
+      `/project-applications/${applicationId}`,
+    )
+    return response.data
+  } catch (error) {
+    console.error('프로젝트 신청 취소 실패:', error)
+    throw error
+  }
+}
+
 // 스터디 신청하기
 export const applyStudy = async (studyId: number, message: string) => {
   try {
@@ -130,6 +143,19 @@ export const rejectStudyApplication = async (applicationId: number) => {
     return response.data
   } catch (error) {
     console.error('스터디 신청 거절 실패:', error)
+    throw error
+  }
+}
+
+// 스터디 신청 취소
+export const cancelStudyApplication = async (applicationId: number) => {
+  try {
+    const response = await axiosInstance.delete(
+      `/study-applications/${applicationId}`,
+    )
+    return response.data
+  } catch (error) {
+    console.error('스터디 신청 취소 실패:', error)
     throw error
   }
 }
