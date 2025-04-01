@@ -1,4 +1,6 @@
 import Button from '@/components/Button'
+import { notify } from '@/components/Toast'
+import { cancelStudyApplication } from '@/libs/apis/apply'
 import { MouseEvent, useState } from 'react'
 
 type StudyCardProps = {
@@ -8,6 +10,7 @@ type StudyCardProps = {
   studyTitle: string
   status: 'PENDING' | 'ACCEPTED' | 'REJECTED'
   openLink: string
+  onCancel: (applicationId: number) => void
 }
 
 const getStatusStyle = (status: string) => {
@@ -26,8 +29,10 @@ const getStatusStyle = (status: string) => {
 export default function AppliedStudyCard({
   message,
   studyTitle,
+  applicationId,
   status,
   openLink,
+  onCancel,
 }: StudyCardProps) {
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -37,8 +42,16 @@ export default function AppliedStudyCard({
     setModalOpen(true)
   }
 
-  const handleCancel = () => {}
-
+  const handleCancel = async (applicationId: number) => {
+    try {
+      await cancelStudyApplication(applicationId)
+      onCancel(applicationId)
+      notify('success', '신청 취소 성공!')
+    } catch (error) {
+      console.error(error)
+      notify('error', '신청 취소에 실패했습니다. 다시 시도해주세요.')
+    }
+  }
   const handleOutsideClick = (e: MouseEvent) => {
     if (e.target === e.currentTarget) {
       setModalOpen(false)
@@ -61,7 +74,7 @@ export default function AppliedStudyCard({
           {status === 'PENDING' && (
             <Button
               type="tertiary"
-              onClick={handleCancel}
+              onClick={() => handleCancel(applicationId)}
               className="max-w-40 text-sm"
             >
               신청 취소

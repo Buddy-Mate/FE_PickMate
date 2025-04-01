@@ -122,7 +122,7 @@ export default function RegisteredStudyCard({
       {/* 왼쪽: 스터디 정보 */}
       <Link
         href={`/study/${id}`}
-        className="bg-custom-gray-300 flex w-full max-w-100 flex-col items-start justify-between rounded-lg p-4 text-sm transition-all hover:scale-105"
+        className="bg-custom-gray-300 flex w-full flex-col items-start justify-between rounded-lg p-4 text-sm transition-all lg:max-w-100"
       >
         <p className="text-custom-blue text-2xl font-bold">{title}</p>
         <div className="mt-2 flex flex-col gap-1 text-sm text-gray-600">
