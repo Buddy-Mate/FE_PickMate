@@ -1,4 +1,6 @@
 import Button from '@/components/Button'
+import { notify } from '@/components/Toast'
+import { cancelProjectApplication } from '@/libs/apis/apply'
 import { MouseEvent, useState } from 'react'
 
 type ProjectCardProps = {
@@ -26,6 +28,7 @@ const getStatusStyle = (status: string) => {
 export default function AppliedProjectCard({
   message,
   projectTitle,
+  applicationId,
   status,
   openLink,
 }: ProjectCardProps) {
@@ -37,7 +40,15 @@ export default function AppliedProjectCard({
     setModalOpen(true)
   }
 
-  const handleCancel = () => {}
+  const handleCancel = async (applicationId: number) => {
+    try {
+      await cancelProjectApplication(applicationId)
+      notify('success', '신청 취소 성공!')
+    } catch (error) {
+      console.error(error)
+      notify('error', '신청 취소에 실패했습니다. 다시 시도해주세요.')
+    }
+  }
 
   const handleOutsideClick = (e: MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -61,7 +72,7 @@ export default function AppliedProjectCard({
           {status === 'PENDING' && (
             <Button
               type="tertiary"
-              onClick={handleCancel}
+              onClick={() => handleCancel(applicationId)}
               className="max-w-40 text-sm"
             >
               신청 취소
