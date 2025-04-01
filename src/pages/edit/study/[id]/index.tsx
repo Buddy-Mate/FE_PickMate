@@ -158,8 +158,8 @@ export default function EditStudy({ study }: EditStudyProps) {
           >
             취소하기
           </Button>
-          <Button type="primary" className="max-w-30">
-            수정하기
+          <Button type="primary" className="max-w-30" disabled={isLoading}>
+            {isLoading ? '수정중...' : '수정정하기'}
           </Button>
         </div>
       </form>

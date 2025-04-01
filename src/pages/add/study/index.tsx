@@ -127,8 +127,8 @@ export default function AddStudy() {
           >
             취소하기
           </Button>
-          <Button type="primary" className="max-w-30">
-            등록하기
+          <Button type="primary" className="max-w-30" disabled={isLoading}>
+            {isLoading ? '등록중...' : '등록하기'}
           </Button>
         </div>
       </form>
