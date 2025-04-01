@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import studyBlack from '@/assets/imgs/banner/studyBlack.png'
+import studyBlack from '@/assets/imgs/banner/studyBlack.webp'
 import Button from '../Button'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'

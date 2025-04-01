@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import carbonBlack from '@/assets/imgs/banner/carbonBlack.png'
+import carbonBlack from '@/assets/imgs/banner/carbonBlack.webp'
 import Button from '../Button'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
