@@ -8,16 +8,21 @@ type AppliedCardListProps = {
   tab: 'project' | 'study'
   projects?: Applicant[]
   studies?: Applicant[]
+  onCancel: (applicationId: number) => void
 }
 
 export default function AppliedCardList({
   tab,
   projects,
+  studies,
+  onCancel,
 }: AppliedCardListProps) {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 2
 
-  if (!projects || projects.length === 0) {
+  const data = tab === 'project' ? projects : studies
+
+  if (!data || data.length === 0) {
     return (
       <div className="mt-20 flex items-center justify-center p-10">
         <p className="text-gray-500">아직 신청 내역이 없습니다.</p>
@@ -26,8 +31,8 @@ export default function AppliedCardList({
   }
 
   const startIndex = (currentPage - 1) * itemsPerPage
-  const currentData = projects.slice(startIndex, startIndex + itemsPerPage)
-  const totalPages = Math.ceil(projects.length / itemsPerPage)
+  const currentData = data.slice(startIndex, startIndex + itemsPerPage)
+  const totalPages = Math.ceil(data.length / itemsPerPage)
 
   return (
     <div className="mt-4 space-y-4">
@@ -38,9 +43,10 @@ export default function AppliedCardList({
             applicantNickname={applicant.applicantNickname}
             applicationId={applicant.applicationId}
             message={applicant.message}
-            projectTitle={applicant.projectTitle}
+            projectTitle={applicant.projectTitle || ''}
             status={applicant.status}
             openLink={applicant.openLink}
+            onCancel={onCancel}
           />
         ) : (
           <AppliedStudyCard
@@ -48,9 +54,10 @@ export default function AppliedCardList({
             applicantNickname={applicant.applicantNickname}
             applicationId={applicant.applicationId}
             message={applicant.message}
-            studyTitle={applicant.studyTitle}
+            studyTitle={applicant.studyTitle || ''}
             status={applicant.status}
             openLink={applicant.openLink}
+            onCancel={onCancel}
           />
         ),
       )}

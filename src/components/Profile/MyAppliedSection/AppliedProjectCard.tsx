@@ -10,6 +10,7 @@ type ProjectCardProps = {
   projectTitle: string
   status: 'PENDING' | 'ACCEPTED' | 'REJECTED'
   openLink: string
+  onCancel: (applicationId: number) => void
 }
 
 const getStatusStyle = (status: string) => {
@@ -31,6 +32,7 @@ export default function AppliedProjectCard({
   applicationId,
   status,
   openLink,
+  onCancel,
 }: ProjectCardProps) {
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -43,6 +45,7 @@ export default function AppliedProjectCard({
   const handleCancel = async (applicationId: number) => {
     try {
       await cancelProjectApplication(applicationId)
+      onCancel(applicationId)
       notify('success', '신청 취소 성공!')
     } catch (error) {
       console.error(error)

@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import { getAppliedProjects, getAppliedStudies } from '@/libs/apis/apply'
 import AppliedCardList from './AppliedCardList'
+import { Applicant } from '@/types/apply'
 
 export default function MyAppliedSection() {
   const [activeTab, setActiveTab] = useState<'project' | 'study'>('project')
-  const [projects, setProjects] = useState([])
-  const [studies, setStudies] = useState([])
+  const [projects, setProjects] = useState<Applicant[]>([])
+  const [studies, setStudies] = useState<Applicant[]>([])
 
   const getData = useCallback(async () => {
     try {
@@ -24,6 +25,18 @@ export default function MyAppliedSection() {
   useEffect(() => {
     getData()
   }, [getData])
+
+  const handleCancelProject = (applicationId: number) => {
+    setProjects((prevProjects) =>
+      prevProjects.filter((project) => project.applicationId !== applicationId),
+    )
+  }
+
+  const handleCancelStudy = (applicationId: number) => {
+    setStudies((prevStudies) =>
+      prevStudies.filter((study) => study.applicationId !== applicationId),
+    )
+  }
 
   return (
     <div className="mt-8">
@@ -49,9 +62,17 @@ export default function MyAppliedSection() {
 
       <div className="w-full">
         {activeTab === 'project' ? (
-          <AppliedCardList tab={activeTab} projects={projects} />
+          <AppliedCardList
+            tab={activeTab}
+            projects={projects}
+            onCancel={handleCancelProject}
+          />
         ) : (
-          <AppliedCardList tab={activeTab} studies={studies} />
+          <AppliedCardList
+            tab={activeTab}
+            studies={studies}
+            onCancel={handleCancelStudy}
+          />
         )}
       </div>
     </div>
