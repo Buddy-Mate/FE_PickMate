@@ -4,7 +4,9 @@ export type Applicant = {
   createdAt: string
   message: string
   openLink: string
+  projectId?: number
   projectTitle?: string
+  studyId?: number
   studyTitle?: string
   status: 'PENDING' | 'ACCEPTED' | 'REJECTED'
 }

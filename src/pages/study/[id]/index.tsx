@@ -54,19 +54,19 @@ export default function StudyDetail({ study }: StudyDetailProps) {
     try {
       const appliedStudies: Applicant[] = await getAppliedStudies()
       const isAlreadyApplied = appliedStudies.some(
-        (appliedStudy) => appliedStudy.studyTitle === study.title,
+        (appliedStudy) => appliedStudy.studyId === study.id,
       )
       setHasApplied(isAlreadyApplied)
     } catch (error) {
       console.error('신청 여부 확인 실패:', error)
     }
-  }, [study.title])
+  }, [study.id])
 
   useEffect(() => {
     if (user) {
       checkIfApplied()
     }
-  }, [user, study.title, checkIfApplied])
+  }, [user, study.id, checkIfApplied])
 
   // 스터디디 마감일 체크
   useEffect(() => {

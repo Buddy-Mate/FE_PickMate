@@ -35,7 +35,6 @@ type ProjectDetailProps = {
 }
 
 export default function ProjectDetail({ project }: ProjectDetailProps) {
-  console.log(project)
   const { user } = useAuthStore()
   const isAuthor = user?.nickname === project.authorNickname
   const [hasApplied, setHasApplied] = useState(false)
@@ -55,19 +54,19 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
     try {
       const appliedProjects: Applicant[] = await getAppliedProjects()
       const isAlreadyApplied = appliedProjects.some(
-        (appliedProject) => appliedProject.projectTitle === project.title,
+        (appliedProject) => appliedProject.projectId === project.id,
       )
       setHasApplied(isAlreadyApplied)
     } catch (error) {
       console.error('신청 여부 확인 실패:', error)
     }
-  }, [project.title])
+  }, [project.id])
 
   useEffect(() => {
     if (user) {
       checkIfApplied()
     }
-  }, [user, project.title, checkIfApplied])
+  }, [user, project.id, checkIfApplied])
 
   // 프로젝트 마감일 체크
   useEffect(() => {
