@@ -1,40 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# PickMate
 
-## Getting Started
+토이프로젝트 매칭 플랫폼
 
-First, run the development server:
+![alt text](./src/assets/imgs/pickMate.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 📅 개발 기간
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2025.03 ~ 개발 진행 중 | 팀 프로젝트 (2명)
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## 🛠️ 기술 스택
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- **프론트**: Next.js Page Router, React, Typescript, pnpm, Tailwind CSS, axios, eslint, prettier, vercel
+- **백엔드**: Java, MySQL, postman
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## ✨ 주요 기능
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1️⃣ 프로젝트/스터디 게시글 그림 (CRUD)
 
-## Learn More
+- 제목, 기술스택, 설명, 마감일 등을 입력
+- 바로 수정 및 삭제 가능
+- 메인 페이지 또는 마이페이지에서 확인
 
-To learn more about Next.js, take a look at the following resources:
+### 2️⃣ 프로젝트/스터디 신청 및 상황 확인
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+- 다른 유저가 작성한 게시물에 신청 가능
+- 신청 시 메세지 입력
+- 신청 후 게시물 작성자에게 알림 전달
+- 신청자는 마이페이지에서 신청 상황 확인 가능 (`대기중`, `수락됨`, `거절됨`)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3️⃣ 검색 및 카테고리별 게시글 필터링
 
-## Deploy on Vercel
+- 프로젝트/스터디 게시글을 검색하고 카테고리별로 필터링
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 4️⃣ 마이페이지
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+- 로그인 후 마이페이지 조회 가능
+- 내가 작성한 게시물 및 신청한 게시물 확인 가능
+
+### 5️⃣ 신청자 관리
+
+- 발작자는 내가 등록한 게시물에서 신청자 목록 확인 가능
+- 신청자는 `대기중` 상황으로 표시
+- 발작자는 각 신청에 대해 **수락/거절** 가능
+  - **수락 시**: 오픈채팅뱅 링크 입력 후 대상방에게 전달
+  - **거절 시**: `거절됨` 상황이 신청에 표시
