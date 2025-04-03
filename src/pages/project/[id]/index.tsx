@@ -4,8 +4,7 @@ import Image from 'next/image'
 import profile from '@/assets/icons/profile.png'
 import Button from '@/components/Button'
 import { MouseEvent, useCallback, useEffect, useState } from 'react'
-import heartEmpty from '@/assets/icons/heartEmpty.png'
-import heartFill from '@/assets/icons/heartFill.png'
+
 import eyeVisible from '@/assets/icons/eyeVisible.png'
 import { deleteProject, getProjectById } from '@/libs/apis/project'
 import { useAuthStore } from '@/store/authStore'
@@ -15,6 +14,7 @@ import { applyProject, getAppliedProjects } from '@/libs/apis/apply'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Applicant } from '@/types/apply'
+import LikeButton from '@/components/LikeButton'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!context.params?.id) {
@@ -35,19 +35,18 @@ type ProjectDetailProps = {
 }
 
 export default function ProjectDetail({ project }: ProjectDetailProps) {
+  const router = useRouter()
+  const { id } = router.query
+  const projectId = Number(id)
+
   const { user } = useAuthStore()
   const isAuthor = user?.nickname === project.authorNickname
   const [hasApplied, setHasApplied] = useState(false)
-
-  const [liked, setLiked] = useState(false)
-  const [likeCount, setLikeCount] = useState(project.likes)
 
   const [message, setMessage] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
 
   const [isClosed, setIsClosed] = useState(false)
-
-  const router = useRouter()
 
   // 이미 신청한 프로젝트인지 확인
   const checkIfApplied = useCallback(async () => {
@@ -78,11 +77,6 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       setIsClosed(true)
     }
   }, [project.deadline])
-
-  const toggleLike = () => {
-    setLiked((prev) => !prev)
-    setLikeCount((prev) => (liked ? prev - 1 : prev + 1))
-  }
 
   const handleAccept = () => {
     setModalOpen(true)
@@ -144,17 +138,11 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
           📅 {project.deadline.split('T')[0]} 까지
         </span>
         <div className="flex items-center gap-4 text-sm text-gray-500">
-          <button
-            onClick={toggleLike}
-            className="flex cursor-pointer items-center gap-1"
-          >
-            <Image
-              src={liked ? heartFill : heartEmpty}
-              alt="좋아요"
-              className="size-5"
-            />
-            <span>{likeCount}</span>
-          </button>
+          <LikeButton
+            id={projectId}
+            initialLikes={project.likes}
+            type="project"
+          />
           <div className="flex items-center gap-1">
             <Image src={eyeVisible} alt="조회수 아이콘" className="size-5" />
             <span>{project.views}</span>

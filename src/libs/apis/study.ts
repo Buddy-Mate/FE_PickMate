@@ -74,3 +74,25 @@ export const getMyStudies = async () => {
     throw error
   }
 }
+
+// 스터디 좋아요
+export const likeStudy = async (studyId: number) => {
+  try {
+    const response = await axiosInstance.post(`/studies/${studyId}/like`)
+    return response.data
+  } catch (error) {
+    console.error('스터디 좋아요 실패:', error)
+    throw error
+  }
+}
+
+// 프로젝트 좋아요 취소
+export const unlikeStudy = async (studyId: number) => {
+  try {
+    const response = await axiosInstance.delete(`/studies/${studyId}/like`)
+    return response.data
+  } catch (error) {
+    console.error('스터디 좋아요 취소 실패:', error)
+    throw error
+  }
+}
