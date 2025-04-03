@@ -4,15 +4,9 @@ import Image from 'next/image'
 import profile from '@/assets/icons/profile.png'
 import Button from '@/components/Button'
 import { MouseEvent, useCallback, useEffect, useState } from 'react'
-import heartEmpty from '@/assets/icons/heartEmpty.png'
-import heartFill from '@/assets/icons/heartFill.png'
+
 import eyeVisible from '@/assets/icons/eyeVisible.png'
-import {
-  deleteProject,
-  getProjectById,
-  likeProject,
-  unlikeProject,
-} from '@/libs/apis/project'
+import { deleteProject, getProjectById } from '@/libs/apis/project'
 import { useAuthStore } from '@/store/authStore'
 import { useRouter } from 'next/router'
 import { notify } from '@/components/Toast'
@@ -20,7 +14,7 @@ import { applyProject, getAppliedProjects } from '@/libs/apis/apply'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Applicant } from '@/types/apply'
-import { useLikeStore } from '@/store/likeStore'
+import LikeButton from '@/components/LikeButton'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!context.params?.id) {
@@ -49,10 +43,6 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
   const isAuthor = user?.nickname === project.authorNickname
   const [hasApplied, setHasApplied] = useState(false)
 
-  const { likedProjects, toggleProjectLike } = useLikeStore()
-  const isLiked = likedProjects.includes(projectId)
-  const [likeCount, setLikeCount] = useState(project.likes)
-
   const [message, setMessage] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
 
@@ -77,10 +67,6 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
     }
   }, [user, project.id, checkIfApplied])
 
-  useEffect(() => {
-    setLikeCount(project.likes)
-  }, [project.likes])
-
   // 프로젝트 마감일 체크
   useEffect(() => {
     const deadlineDate = new Date(project.deadline)
@@ -91,25 +77,6 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       setIsClosed(true)
     }
   }, [project.deadline])
-
-  const handleLike = async () => {
-    try {
-      toggleProjectLike(projectId) // Zustand 상태 변경 (전역 상태 업데이트)
-
-      if (isLiked) {
-        await unlikeProject(projectId)
-        setLikeCount((prev) => prev - 1)
-      } else {
-        await likeProject(projectId)
-        setLikeCount((prev) => prev + 1)
-      }
-    } catch (error) {
-      console.error('좋아요 처리 실패:', error)
-      // 실패 시 상태 롤백
-      toggleProjectLike(projectId)
-      setLikeCount(project.likes)
-    }
-  }
 
   const handleAccept = () => {
     setModalOpen(true)
@@ -171,17 +138,11 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
           📅 {project.deadline.split('T')[0]} 까지
         </span>
         <div className="flex items-center gap-4 text-sm text-gray-500">
-          <button
-            onClick={handleLike}
-            className="flex cursor-pointer items-center gap-1"
-          >
-            <Image
-              src={isLiked ? heartFill : heartEmpty}
-              alt="좋아요"
-              className="size-5"
-            />
-            <span>{likeCount}</span>
-          </button>
+          <LikeButton
+            id={projectId}
+            initialLikes={project.likes}
+            type="project"
+          />
           <div className="flex items-center gap-1">
             <Image src={eyeVisible} alt="조회수 아이콘" className="size-5" />
             <span>{project.views}</span>

@@ -3,16 +3,9 @@ import Image from 'next/image'
 import profile from '@/assets/icons/profile.png'
 import Button from '@/components/Button'
 import { MouseEvent, useCallback, useEffect, useState } from 'react'
-import heartEmpty from '@/assets/icons/heartEmpty.png'
-import heartFill from '@/assets/icons/heartFill.png'
 import eyeVisible from '@/assets/icons/eyeVisible.png'
 import { Study } from '@/types/study'
-import {
-  deleteStudy,
-  getStudyById,
-  likeStudy,
-  unlikeStudy,
-} from '@/libs/apis/study'
+import { deleteStudy, getStudyById } from '@/libs/apis/study'
 import { useAuthStore } from '@/store/authStore'
 import { notify } from '@/components/Toast'
 import { useRouter } from 'next/router'
@@ -20,7 +13,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { applyStudy, getAppliedStudies } from '@/libs/apis/apply'
 import { Applicant } from '@/types/apply'
-import { useLikeStore } from '@/store/likeStore'
+import LikeButton from '@/components/LikeButton'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!context.params?.id) {
@@ -48,10 +41,6 @@ export default function StudyDetail({ study }: StudyDetailProps) {
   const { user } = useAuthStore()
   const isAuthor = user?.nickname === study.authorNickname
   const [hasApplied, setHasApplied] = useState(false)
-
-  const { likedStudies, toggleStudyLike } = useLikeStore()
-  const isLiked = likedStudies.includes(studyId)
-  const [likeCount, setLikeCount] = useState(study.likes)
 
   const [message, setMessage] = useState('')
   const [modalOpen, setModalOpen] = useState(false)
@@ -87,29 +76,6 @@ export default function StudyDetail({ study }: StudyDetailProps) {
       setIsClosed(true)
     }
   }, [study.deadline])
-
-  useEffect(() => {
-    setLikeCount(study.likes)
-  }, [study.likes])
-
-  const handleLike = async () => {
-    try {
-      toggleStudyLike(studyId) // Zustand 상태 변경 (전역 상태 업데이트)
-
-      if (isLiked) {
-        await unlikeStudy(studyId)
-        setLikeCount((prev) => prev - 1)
-      } else {
-        await likeStudy(studyId)
-        setLikeCount((prev) => prev + 1)
-      }
-    } catch (error) {
-      console.error('좋아요 처리 실패:', error)
-      // 실패 시 상태 롤백
-      toggleStudyLike(studyId)
-      setLikeCount(study.likes)
-    }
-  }
 
   const handleAccept = () => {
     setModalOpen(true)
@@ -171,17 +137,8 @@ export default function StudyDetail({ study }: StudyDetailProps) {
           📅 {study.deadline.split('T')[0]} 까지
         </span>
         <div className="flex items-center gap-4 text-sm text-gray-500">
-          <button
-            onClick={handleLike}
-            className="flex cursor-pointer items-center gap-1"
-          >
-            <Image
-              src={isLiked ? heartFill : heartEmpty}
-              alt="좋아요"
-              className="size-5"
-            />
-            <span>{likeCount}</span>
-          </button>
+          <LikeButton id={studyId} initialLikes={study.likes} type="study" />
+
           <div className="flex items-center gap-1">
             <Image src={eyeVisible} alt="조회수 아이콘" className="size-5" />
             <span>{study.views}</span>
