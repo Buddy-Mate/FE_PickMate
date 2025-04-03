@@ -3,9 +3,11 @@ import profile from '@/assets/icons/profile.png'
 import heartEmpty from '@/assets/icons/heartEmpty.png'
 import heartFill from '@/assets/icons/heartFill.png'
 import eyeVisible from '@/assets/icons/eyeVisible.png'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Study } from '@/types/study'
+import { useLikeStore } from '@/store/likeStore'
+import { likeStudy, unlikeStudy } from '@/libs/apis/study'
 
 type StudyCardProps = {
   study: Study
@@ -13,12 +15,32 @@ type StudyCardProps = {
 
 export default function ProjectCard({ study }: StudyCardProps) {
   const { id, title, authorNickname, likes, views } = study
-  const [liked, setLiked] = useState(false)
+
+  const { likedStudies, toggleStudyLike } = useLikeStore()
+  const isLiked = likedStudies.includes(id)
   const [likeCount, setLikeCount] = useState(likes)
 
-  const toggleLike = () => {
-    setLiked((prev) => !prev)
-    setLikeCount((prev) => (liked ? prev - 1 : prev + 1))
+  useEffect(() => {
+    setLikeCount(likes)
+  }, [likes])
+
+  const handleLike = async () => {
+    try {
+      toggleStudyLike(id) // Zustand 상태 변경 (전역 상태 업데이트)
+
+      if (isLiked) {
+        await unlikeStudy(id)
+        setLikeCount((prev) => prev - 1)
+      } else {
+        await likeStudy(id)
+        setLikeCount((prev) => prev + 1)
+      }
+    } catch (error) {
+      console.error('좋아요 처리 실패:', error)
+      // 실패 시 상태 롤백
+      toggleStudyLike(id)
+      setLikeCount(likes)
+    }
   }
 
   return (
@@ -44,11 +66,11 @@ export default function ProjectCard({ study }: StudyCardProps) {
         {/* 좋아요 & 조회수 */}
         <div className="flex items-center gap-4 text-sm text-gray-500">
           <button
-            onClick={toggleLike}
+            onClick={handleLike}
             className="flex cursor-pointer items-center gap-1"
           >
             <Image
-              src={liked ? heartFill : heartEmpty}
+              src={isLiked ? heartFill : heartEmpty}
               alt="좋아요"
               className="size-5"
             />
