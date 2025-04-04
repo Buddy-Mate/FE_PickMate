@@ -1,14 +1,22 @@
 import Image from 'next/image'
-import studyBlack from '@/assets/imgs/banner/studyBlack.png'
+import studyBlack from '@/assets/imgs/banner/studyBlack.webp'
 import Button from '../Button'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import Loading from '../Loading'
 
 export default function StudyBanner() {
+  const [loading, setLoading] = useState(false)
+
   const router = useRouter()
 
   const handleAddProject = () => {
+    setLoading(true)
     router.push('/add/study')
   }
+
+  if (loading) return <Loading />
+
   return (
     <div className="flex justify-center bg-black">
       <div className="flex h-full w-full max-w-[1200px] flex-col overflow-hidden py-4 md:h-fit md:flex-row md:items-center md:justify-center">

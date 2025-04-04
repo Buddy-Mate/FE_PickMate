@@ -1,9 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import ProjectBanner from '@/components/Banner/ProjectBanner'
-import Dropdown from '@/components/Dropdown'
-import Pagination from '@/components/Pagination'
-import ProjectList from '@/components/ProjectList'
-import SearchBar from '@/components/SearchBar'
+import dynamic from 'next/dynamic'
+
+const ProjectBanner = dynamic(
+  () => import('@/components/Banner/ProjectBanner'),
+  {
+    ssr: false, // 클라이언트에서만 렌더링
+  },
+)
+const Dropdown = dynamic(() => import('@/components/Dropdown'), { ssr: false })
+const Pagination = dynamic(() => import('@/components/Pagination'), {
+  ssr: false,
+})
+const ProjectList = dynamic(() => import('@/components/ProjectList'), {
+  ssr: false,
+})
+const SearchBar = dynamic(() => import('@/components/SearchBar'), {
+  ssr: false,
+})
+
 import { getAllProjects } from '@/libs/apis/project'
 import { useAuthStore } from '@/store/authStore'
 import { User } from '@/types/auth'

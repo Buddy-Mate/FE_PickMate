@@ -8,6 +8,7 @@ import full6 from '@/assets/imgs/landing/6full.png'
 import bottom7 from '@/assets/imgs/landing/7bottom.png'
 import { useRouter } from 'next/router'
 import Button from '@/components/Button'
+import { useAuthStore } from '@/store/authStore'
 
 export async function getStaticProps() {
   return {
@@ -27,8 +28,14 @@ export default function LandingPage() {
 
   const router = useRouter()
 
+  const { isLoggedIn } = useAuthStore()
+
   const handleClick = () => {
-    router.push('/login')
+    if (isLoggedIn) {
+      router.push('/home')
+    } else {
+      router.push('/login')
+    }
   }
 
   return (
