@@ -31,7 +31,7 @@ export default function Header() {
             </Link>
           </nav>
         </div>
-        <Link href="/my">
+        <Link href="/my" className="rounded-full border-2">
           <Image
             src={profile}
             alt="마이페이지 로고"
