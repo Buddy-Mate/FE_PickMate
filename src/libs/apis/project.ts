@@ -74,3 +74,25 @@ export const getMyProjects = async () => {
     throw error
   }
 }
+
+// 프로젝트 좋아요
+export const likeProject = async (projectId: number) => {
+  try {
+    const response = await axiosInstance.post(`/projects/${projectId}/like`)
+    return response.data
+  } catch (error) {
+    console.error('프로젝트 좋아요 실패:', error)
+    throw error
+  }
+}
+
+// 프로젝트 좋아요 취소
+export const unlikeProject = async (projectId: number) => {
+  try {
+    const response = await axiosInstance.delete(`/projects/${projectId}/like`)
+    return response.data
+  } catch (error) {
+    console.error('프로젝트 좋아요 취소 실패:', error)
+    throw error
+  }
+}
