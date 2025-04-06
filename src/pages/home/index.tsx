@@ -38,6 +38,7 @@ type HomeProps = {
 
 export default function HomePage({ projects, user }: HomeProps) {
   const [sortedProjects, setSortedProjects] = useState<Project[]>(projects)
+  const [searchResults, setSearchResults] = useState<Project[] | null>(null)
   const [sortOption, setSortOption] = useState('최신순')
 
   const [currentPage, setCurrentPage] = useState(1)
@@ -85,17 +86,21 @@ export default function HomePage({ projects, user }: HomeProps) {
     setSortedProjects(sorted)
   }, [projects])
 
+  const handleSearchResult = (results: Project[]) => {
+    setSearchResults(results.length ? results : null)
+  }
+
   return (
     <div>
       <ProjectBanner />
       <div className="mx-auto w-full max-w-[1200px] px-10 py-10">
         <div className="flex items-center justify-start gap-4 py-10">
           <Dropdown onSelect={handleSortChange} />
-          <SearchBar />
+          <SearchBar type="project" onSearchResult={handleSearchResult} />
         </div>
         <ProjectList
           currentPage={currentPage}
-          projects={sortedProjects}
+          projects={searchResults ?? sortedProjects}
           itemsPerPage={itemsPerPage}
         />
         <Pagination

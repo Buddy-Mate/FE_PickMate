@@ -96,3 +96,16 @@ export const unlikeProject = async (projectId: number) => {
     throw error
   }
 }
+
+// 프로젝트 검색
+export const searchProject = async (keyword: string) => {
+  try {
+    const response = await axiosInstance.get('/projects/search', {
+      params: { keyword },
+    })
+    return response.data
+  } catch (error) {
+    console.error('프로젝트 검색 실패:', error)
+    throw error
+  }
+}
