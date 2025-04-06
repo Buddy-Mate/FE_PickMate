@@ -86,13 +86,26 @@ export const likeStudy = async (studyId: number) => {
   }
 }
 
-// 프로젝트 좋아요 취소
+// 스터디 좋아요 취소
 export const unlikeStudy = async (studyId: number) => {
   try {
     const response = await axiosInstance.delete(`/studies/${studyId}/like`)
     return response.data
   } catch (error) {
     console.error('스터디 좋아요 취소 실패:', error)
+    throw error
+  }
+}
+
+// 스터디 검색
+export const searchStudy = async (keyword: string) => {
+  try {
+    const response = await axiosInstance.get('/studies/search', {
+      params: { keyword },
+    })
+    return response.data
+  } catch (error) {
+    console.error('스터디 검색 실패:', error)
     throw error
   }
 }
