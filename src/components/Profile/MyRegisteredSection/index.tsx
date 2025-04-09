@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { getMyProjects } from '@/libs/apis/project'
 import { getMyStudies } from '@/libs/apis/study'
 import RegisteredCardList from './RegisteredCardList'
+import { motion } from 'framer-motion'
 
 export default function MyRegisteredSection() {
   const [activeTab, setActiveTab] = useState<'project' | 'study'>('project')
@@ -50,9 +51,27 @@ export default function MyRegisteredSection() {
 
       <div className="w-full">
         {activeTab === 'project' ? (
-          <RegisteredCardList tab={activeTab} projects={projects} />
+          <motion.div
+            key="project"
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.3 }}
+            className="w-full"
+          >
+            <RegisteredCardList tab="project" projects={projects} />
+          </motion.div>
         ) : (
-          <RegisteredCardList tab={activeTab} studies={studies} />
+          <motion.div
+            key="study"
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.3 }}
+            className="w-full"
+          >
+            <RegisteredCardList tab="study" studies={studies} />
+          </motion.div>
         )}
       </div>
     </div>

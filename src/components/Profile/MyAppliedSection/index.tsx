@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { getAppliedProjects, getAppliedStudies } from '@/libs/apis/apply'
 import AppliedCardList from './AppliedCardList'
 import { Applicant } from '@/types/apply'
+import { motion } from 'framer-motion'
 
 export default function MyAppliedSection() {
   const [activeTab, setActiveTab] = useState<'project' | 'study'>('project')
@@ -62,17 +63,35 @@ export default function MyAppliedSection() {
 
       <div className="w-full">
         {activeTab === 'project' ? (
-          <AppliedCardList
-            tab={activeTab}
-            projects={projects}
-            onCancel={handleCancelProject}
-          />
+          <motion.div
+            key="project"
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.3 }}
+            className="w-full"
+          >
+            <AppliedCardList
+              tab={activeTab}
+              projects={projects}
+              onCancel={handleCancelProject}
+            />
+          </motion.div>
         ) : (
-          <AppliedCardList
-            tab={activeTab}
-            studies={studies}
-            onCancel={handleCancelStudy}
-          />
+          <motion.div
+            key="study"
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.3 }}
+            className="w-full"
+          >
+            <AppliedCardList
+              tab={activeTab}
+              studies={studies}
+              onCancel={handleCancelStudy}
+            />
+          </motion.div>
         )}
       </div>
     </div>
