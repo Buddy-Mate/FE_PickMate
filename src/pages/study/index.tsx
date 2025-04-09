@@ -21,6 +21,7 @@ type StudyProps = {
 
 export default function StudyPage({ studies }: StudyProps) {
   const [sortedStudies, setSortedStudies] = useState<Study[]>(studies)
+  const [searchResults, setSearchResults] = useState<Study[] | null>(null)
   const [sortOption, setSortOption] = useState('최신순')
 
   const [currentPage, setCurrentPage] = useState(1)
@@ -59,17 +60,21 @@ export default function StudyPage({ studies }: StudyProps) {
     setSortedStudies(sorted)
   }, [studies])
 
+  const handleSearchResult = (results: Study[]) => {
+    setSearchResults(results.length ? results : null)
+  }
+
   return (
     <div>
       <StudyBanner />
       <div className="mx-auto w-full max-w-[1200px] px-10 py-10">
         <div className="flex items-center justify-start gap-4 py-10">
           <Dropdown onSelect={handleSortChange} />
-          <SearchBar />
+          <SearchBar type="study" onSearchResult={handleSearchResult} />
         </div>
         <StudyList
           currentPage={currentPage}
-          studies={sortedStudies}
+          studies={searchResults ?? sortedStudies}
           itemsPerPage={itemsPerPage}
         />
         <Pagination
