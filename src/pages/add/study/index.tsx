@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useRouter } from 'next/router'
-import Loading from '@/components/Loading'
 import { notify } from '@/components/Toast'
 import { studySchema } from '@/utils/studySchema'
 import { createStudy } from '@/libs/apis/study'
@@ -33,8 +32,6 @@ export default function AddStudy() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [description, setDescription] = useState('')
 
-  const [isLoading, setIsLoading] = useState(false)
-
   const router = useRouter()
 
   useEffect(() => {
@@ -47,7 +44,6 @@ export default function AddStudy() {
   }, [selectedDate, setValue])
 
   const onSubmit = async (data: FormData) => {
-    setIsLoading(true)
     try {
       await createStudy(data)
       notify('success', '스터디 등록 성공!')
@@ -55,12 +51,8 @@ export default function AddStudy() {
     } catch (error) {
       notify('error', '스터디 등록에 실패했습니다. 다시 시도해주세요.')
       console.error('스터디 등록 에러:', error)
-    } finally {
-      setIsLoading(false)
     }
   }
-
-  if (isLoading) return <Loading />
 
   return (
     <div className="mx-auto w-full max-w-[1200px] px-10 py-10">
@@ -127,8 +119,8 @@ export default function AddStudy() {
           >
             취소하기
           </Button>
-          <Button type="primary" className="max-w-30" disabled={isLoading}>
-            {isLoading ? '등록중...' : '등록하기'}
+          <Button type="primary" className="max-w-30">
+            등록하기
           </Button>
         </div>
       </form>

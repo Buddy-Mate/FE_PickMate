@@ -3,8 +3,7 @@ import { Project } from '@/types/project'
 import Image from 'next/image'
 import profile from '@/assets/icons/profile.png'
 import Button from '@/components/Button'
-import { MouseEvent, useCallback, useEffect, useState } from 'react'
-
+import { useCallback, useEffect, useState } from 'react'
 import eyeVisible from '@/assets/icons/eyeVisible.png'
 import { deleteProject, getProjectById } from '@/libs/apis/project'
 import { useAuthStore } from '@/store/authStore'
@@ -15,6 +14,8 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Applicant } from '@/types/apply'
 import LikeButton from '@/components/LikeButton'
+import Modal from '@/components/Modal'
+import useModal from '@/hooks/useModal'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!context.params?.id) {
@@ -44,9 +45,10 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
   const [hasApplied, setHasApplied] = useState(false)
 
   const [message, setMessage] = useState('')
-  const [modalOpen, setModalOpen] = useState(false)
 
   const [isClosed, setIsClosed] = useState(false)
+
+  const { isOpen, closeModal, openModal } = useModal()
 
   // 이미 신청한 프로젝트인지 확인
   const checkIfApplied = useCallback(async () => {
@@ -79,23 +81,17 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
   }, [project.deadline])
 
   const handleAccept = () => {
-    setModalOpen(true)
+    openModal()
   }
 
   const handleModalSubmit = async () => {
     try {
       await applyProject(project.id, message)
-      setModalOpen(false)
+      closeModal()
       notify('success', '프로젝트 신청 완료!')
       router.push('/my')
     } catch (error) {
       console.error('프로젝트 신청 실패:', error)
-    }
-  }
-
-  const handleOutsideClick = (e: MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      setModalOpen(false)
     }
   }
 
@@ -203,42 +199,29 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
           </Button>
         )}
       </div>
-      {modalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg"
-          onClick={handleOutsideClick}
-        >
-          <div
-            className="bg-custom-black min-w-100 rounded-lg border-2 p-6"
-            onClick={(e) => e.stopPropagation()}
+
+      <Modal isOpen={isOpen} onClose={closeModal}>
+        <h2 className="mb-4 text-xl font-semibold">🖥️ 메세지 입력</h2>
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          className="text-custom-white focus:border-custom-white border-custom-gray-300 w-full rounded-lg border-2 bg-transparent px-4 py-3 outline-none"
+          placeholder="작성자에게 보낼 메세지를 입력하세요"
+        />
+        <div className="mt-4 flex w-full items-center justify-center gap-4">
+          <Button
+            type="primary"
+            onClick={handleModalSubmit}
+            className="max-w-30"
           >
-            <h2 className="mb-4 text-xl font-semibold">🖥️ 메세지 입력</h2>
-            <input
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              className="text-custom-white focus:border-custom-white border-custom-gray-300 w-full rounded-lg border-2 bg-transparent px-4 py-3 outline-none"
-              placeholder="작성자에게 보낼 메세지를 입력하세요"
-            />
-            <div className="mt-4 flex w-full items-center justify-center gap-4">
-              <Button
-                type="primary"
-                onClick={handleModalSubmit}
-                className="max-w-30"
-              >
-                제출
-              </Button>
-              <Button
-                type="tertiary"
-                onClick={() => setModalOpen(false)}
-                className="max-w-30"
-              >
-                취소
-              </Button>
-            </div>
-          </div>
+            제출
+          </Button>
+          <Button type="tertiary" onClick={closeModal} className="max-w-30">
+            취소
+          </Button>
         </div>
-      )}
+      </Modal>
     </div>
   )
 }

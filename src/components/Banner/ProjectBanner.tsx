@@ -2,20 +2,13 @@ import Image from 'next/image'
 import carbonBlack from '@/assets/imgs/banner/carbonBlack.webp'
 import Button from '../Button'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import Loading from '../Loading'
 
 export default function ProjectBanner() {
-  const [loading, setLoading] = useState(false)
-
   const router = useRouter()
 
   const handleAddProject = () => {
-    setLoading(true)
     router.push('/add/project')
   }
-
-  if (loading) return <Loading />
 
   return (
     <div className="flex justify-center bg-black">

@@ -1,5 +1,7 @@
 import Button from '@/components/Button'
+import Modal from '@/components/Modal'
 import { notify } from '@/components/Toast'
+import useModal from '@/hooks/useModal'
 import {
   acceptProjectApplication,
   getProjectApplicants,
@@ -7,7 +9,7 @@ import {
 } from '@/libs/apis/apply'
 import { Applicant } from '@/types/apply'
 import Link from 'next/link'
-import { MouseEvent, useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 type ProjectCardProps = {
   title: string
@@ -27,12 +29,13 @@ export default function RegisteredProjectCard({
   // status,
 }: ProjectCardProps) {
   const [chatRoomUrl, setChatRoomUrl] = useState<string>('')
-  const [modalOpen, setModalOpen] = useState(false)
 
   const [applicantsList, setApplicantsList] = useState<Applicant[]>([])
   const [applicationIdToAccept, setApplicationIdToAccept] = useState<
     number | null
   >(null)
+
+  const { isOpen, closeModal, openModal } = useModal()
 
   const getApplicants = useCallback(async () => {
     if (id) {
@@ -50,7 +53,7 @@ export default function RegisteredProjectCard({
   }, [getApplicants])
 
   const handleAccept = (applicationId: number) => {
-    setModalOpen(true)
+    openModal()
     setApplicationIdToAccept(applicationId)
   }
 
@@ -91,18 +94,12 @@ export default function RegisteredProjectCard({
         ),
       )
 
-      setModalOpen(false)
+      closeModal()
       setChatRoomUrl('')
       notify('success', '신청을 수락했습니다!')
     } catch (error) {
       notify('error', '신청 수락에 실패했습니다.')
       console.error('신청 수락 실패:', error)
-    }
-  }
-
-  const handleOutsideClick = (e: MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      setModalOpen(false)
     }
   }
 
@@ -196,42 +193,28 @@ export default function RegisteredProjectCard({
       </div>
 
       {/* Modal */}
-      {modalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg"
-          onClick={handleOutsideClick}
-        >
-          <div
-            className="bg-custom-black min-w-100 rounded-lg border-2 p-6"
-            onClick={(e) => e.stopPropagation()}
+      <Modal isOpen={isOpen} onClose={closeModal}>
+        <h2 className="mb-4 text-xl font-semibold">🖥️ 채팅방 주소 입력</h2>
+        <input
+          type="text"
+          value={chatRoomUrl}
+          onChange={(e) => setChatRoomUrl(e.target.value)}
+          className="text-custom-white focus:border-custom-white border-custom-gray-300 w-full rounded-lg border-2 bg-transparent px-4 py-3 outline-none"
+          placeholder="채팅방 URL을 입력하세요"
+        />
+        <div className="mt-4 flex w-full items-center justify-center gap-4">
+          <Button
+            type="primary"
+            onClick={handleModalSubmit}
+            className="max-w-30"
           >
-            <h2 className="mb-4 text-xl font-semibold">🖥️ 채팅방 주소 입력</h2>
-            <input
-              type="text"
-              value={chatRoomUrl}
-              onChange={(e) => setChatRoomUrl(e.target.value)}
-              className="text-custom-white focus:border-custom-white border-custom-gray-300 w-full rounded-lg border-2 bg-transparent px-4 py-3 outline-none"
-              placeholder="채팅방 URL을 입력하세요"
-            />
-            <div className="mt-4 flex w-full items-center justify-center gap-4">
-              <Button
-                type="primary"
-                onClick={handleModalSubmit}
-                className="max-w-30"
-              >
-                제출
-              </Button>
-              <Button
-                type="tertiary"
-                onClick={() => setModalOpen(false)}
-                className="max-w-30"
-              >
-                취소
-              </Button>
-            </div>
-          </div>
+            제출
+          </Button>
+          <Button type="tertiary" onClick={closeModal} className="max-w-30">
+            취소
+          </Button>
         </div>
-      )}
+      </Modal>
     </div>
   )
 }

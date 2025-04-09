@@ -1,7 +1,8 @@
 import Button from '@/components/Button'
+import Modal from '@/components/Modal'
 import { notify } from '@/components/Toast'
+import useModal from '@/hooks/useModal'
 import { cancelStudyApplication } from '@/libs/apis/apply'
-import { MouseEvent, useState } from 'react'
 
 type StudyCardProps = {
   applicantNickname: string
@@ -34,12 +35,12 @@ export default function AppliedStudyCard({
   openLink,
   onCancel,
 }: StudyCardProps) {
-  const [modalOpen, setModalOpen] = useState(false)
+  const { isOpen, closeModal, openModal } = useModal()
 
   const statusStyle = getStatusStyle(status)
 
   const handleConfirm = () => {
-    setModalOpen(true)
+    openModal()
   }
 
   const handleCancel = async (applicationId: number) => {
@@ -50,11 +51,6 @@ export default function AppliedStudyCard({
     } catch (error) {
       console.error(error)
       notify('error', '신청 취소에 실패했습니다. 다시 시도해주세요.')
-    }
-  }
-  const handleOutsideClick = (e: MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      setModalOpen(false)
     }
   }
 
@@ -93,35 +89,19 @@ export default function AppliedStudyCard({
       </div>
 
       {/* Modal */}
-      {modalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg"
-          onClick={handleOutsideClick}
-        >
-          <div
-            className="bg-custom-black min-w-100 rounded-lg border-2 p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="mb-4 text-xl font-semibold">🖥️ 오픈 채팅방 링크</h2>
-            {openLink && openLink !== '' ? (
-              <p className="text-custom-white rounded-lg border p-2">
-                {openLink}
-              </p>
-            ) : (
-              <p className="text-gray-500">링크가 없습니다.</p>
-            )}
-            <div className="mt-4 flex w-full items-center justify-center gap-4">
-              <Button
-                type="primary"
-                onClick={() => setModalOpen(false)}
-                className="max-w-30"
-              >
-                확인
-              </Button>
-            </div>
-          </div>
+      <Modal isOpen={isOpen} onClose={closeModal}>
+        <h2 className="mb-4 text-xl font-semibold">🖥️ 오픈 채팅방 링크</h2>
+        {openLink && openLink !== '' ? (
+          <p className="text-custom-white rounded-lg border p-2">{openLink}</p>
+        ) : (
+          <p className="text-gray-500">링크가 없습니다.</p>
+        )}
+        <div className="mt-4 flex w-full items-center justify-center gap-4">
+          <Button type="primary" onClick={closeModal} className="max-w-30">
+            확인
+          </Button>
         </div>
-      )}
+      </Modal>
     </div>
   )
 }

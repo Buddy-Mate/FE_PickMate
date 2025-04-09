@@ -15,7 +15,6 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useRouter } from 'next/router'
 import { createProject } from '@/libs/apis/project'
-import Loading from '@/components/Loading'
 import { notify } from '@/components/Toast'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -44,8 +43,6 @@ export default function AddProject() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
 
   const [description, setDescription] = useState('')
-
-  const [isLoading, setIsLoading] = useState(false)
 
   const router = useRouter()
 
@@ -83,7 +80,6 @@ export default function AddProject() {
   }, [selectedDate, setValue])
 
   const onSubmit = async (data: FormData) => {
-    setIsLoading(true)
     try {
       await createProject(data)
       notify('success', '프로젝트 등록 성공!')
@@ -91,12 +87,8 @@ export default function AddProject() {
     } catch (error) {
       notify('error', '프로젝트 등록에 실패했습니다. 다시 시도해주세요.')
       console.error('프로젝트 등록 에러:', error)
-    } finally {
-      setIsLoading(false)
     }
   }
-
-  if (isLoading) return <Loading />
 
   return (
     <div className="mx-auto w-full max-w-[1200px] px-10 py-10">
@@ -198,8 +190,8 @@ export default function AddProject() {
           >
             취소하기
           </Button>
-          <Button type="primary" className="max-w-30" disabled={isLoading}>
-            {isLoading ? '등록중...' : '등록하기'}
+          <Button type="primary" className="max-w-30">
+            등록하기
           </Button>
         </div>
       </form>

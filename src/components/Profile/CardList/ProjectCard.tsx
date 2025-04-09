@@ -1,7 +1,9 @@
 import Button from '@/components/Button'
+import Modal from '@/components/Modal'
+import useModal from '@/hooks/useModal'
 import { getProjectApplicants } from '@/libs/apis/apply'
 import Link from 'next/link'
-import { MouseEvent, useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 type ProjectCardProps = {
   type: 'register' | 'apply'
@@ -27,7 +29,6 @@ export default function ProjectCard({
   type,
 }: ProjectCardProps) {
   const [chatRoomUrl, setChatRoomUrl] = useState('')
-  const [modalOpen, setModalOpen] = useState(false)
   const [currentStatus, setCurrentStatus] = useState(status)
   const [applicantsList, setApplicantsList] = useState<
     {
@@ -37,6 +38,8 @@ export default function ProjectCard({
       message: string
     }[]
   >([])
+
+  const { isOpen, closeModal, openModal } = useModal()
 
   const getApplicants = useCallback(async () => {
     if (id) {
@@ -56,7 +59,7 @@ export default function ProjectCard({
   }, [getApplicants, type])
 
   const handleAccept = () => {
-    setModalOpen(true)
+    openModal()
   }
 
   const handleReject = () => {
@@ -64,13 +67,7 @@ export default function ProjectCard({
   }
 
   const handleModalSubmit = () => {
-    setModalOpen(false)
-  }
-
-  const handleOutsideClick = (e: MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      setModalOpen(false)
-    }
+    closeModal()
   }
 
   return (
@@ -153,42 +150,28 @@ export default function ProjectCard({
       </div>
 
       {/* Modal */}
-      {modalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-lg"
-          onClick={handleOutsideClick}
-        >
-          <div
-            className="bg-custom-black min-w-100 rounded-lg border-2 p-6"
-            onClick={(e) => e.stopPropagation()}
+      <Modal isOpen={isOpen} onClose={closeModal}>
+        <h2 className="mb-4 text-xl font-semibold">🖥️ 채팅방 주소 입력</h2>
+        <input
+          type="text"
+          value={chatRoomUrl}
+          onChange={(e) => setChatRoomUrl(e.target.value)}
+          className="text-custom-white focus:border-custom-white border-custom-gray-300 w-full rounded-lg border-2 bg-transparent px-4 py-3 outline-none"
+          placeholder="채팅방 URL을 입력하세요"
+        />
+        <div className="mt-4 flex w-full items-center justify-center gap-4">
+          <Button
+            type="primary"
+            onClick={handleModalSubmit}
+            className="max-w-30"
           >
-            <h2 className="mb-4 text-xl font-semibold">🖥️ 채팅방 주소 입력</h2>
-            <input
-              type="text"
-              value={chatRoomUrl}
-              onChange={(e) => setChatRoomUrl(e.target.value)}
-              className="text-custom-white focus:border-custom-white border-custom-gray-300 w-full rounded-lg border-2 bg-transparent px-4 py-3 outline-none"
-              placeholder="채팅방 URL을 입력하세요"
-            />
-            <div className="mt-4 flex w-full items-center justify-center gap-4">
-              <Button
-                type="primary"
-                onClick={handleModalSubmit}
-                className="max-w-30"
-              >
-                제출
-              </Button>
-              <Button
-                type="tertiary"
-                onClick={() => setModalOpen(false)}
-                className="max-w-30"
-              >
-                취소
-              </Button>
-            </div>
-          </div>
+            제출
+          </Button>
+          <Button type="tertiary" onClick={closeModal} className="max-w-30">
+            취소
+          </Button>
         </div>
-      )}
+      </Modal>
     </div>
   )
 }

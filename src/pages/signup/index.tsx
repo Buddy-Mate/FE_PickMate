@@ -7,8 +7,6 @@ import { useForm } from 'react-hook-form'
 import logo from '@/assets/imgs/logo.png'
 import Button from '@/components/Button'
 import { signup } from '@/libs/apis/auth'
-import { useState } from 'react'
-import Loading from '@/components/Loading'
 import { notify } from '@/components/Toast'
 
 type FormData = {
@@ -29,10 +27,8 @@ export default function Signup() {
   })
 
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
 
   const onSubmit = async (data: FormData) => {
-    setIsLoading(true)
     try {
       const { email, nickname, password } = data
       await signup({ email, nickname, password })
@@ -42,12 +38,8 @@ export default function Signup() {
     } catch (error) {
       notify('error', '회원가입에 실패했습니다.')
       console.error('회원가입 에러:', error)
-    } finally {
-      setIsLoading(false)
     }
   }
-
-  if (isLoading) return <Loading />
 
   return (
     <div className="flex max-h-screen flex-col items-center justify-center px-4 py-10">

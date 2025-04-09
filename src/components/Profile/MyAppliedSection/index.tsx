@@ -65,10 +65,10 @@ export default function MyAppliedSection() {
         {activeTab === 'project' ? (
           <motion.div
             key="project"
-            initial={{ opacity: 0, x: 10 }}
+            initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
-            transition={{ duration: 0.3 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.5 }}
             className="w-full"
           >
             <AppliedCardList
@@ -80,10 +80,10 @@ export default function MyAppliedSection() {
         ) : (
           <motion.div
             key="study"
-            initial={{ opacity: 0, x: 10 }}
+            initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
-            transition={{ duration: 0.3 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.5 }}
             className="w-full"
           >
             <AppliedCardList
