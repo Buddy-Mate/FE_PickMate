@@ -18,7 +18,7 @@ export default function Pagination({
       <button
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="border-custom-gray-100 flex size-10 cursor-pointer items-center justify-center rounded-full border bg-transparent disabled:cursor-not-allowed"
+        className="border-custom-gray-100 hover:bg-custom-gray-100 flex size-10 cursor-pointer items-center justify-center rounded-full border bg-transparent disabled:cursor-not-allowed disabled:bg-transparent"
       >
         {'<'}
       </button>
@@ -29,7 +29,7 @@ export default function Pagination({
           className={`flex size-10 cursor-pointer items-center justify-center rounded-full ${
             currentPage === index + 1
               ? 'bg-custom-gray-100 text-white'
-              : 'border-custom-gray-100 border bg-transparent'
+              : 'border-custom-gray-100 hover:bg-custom-gray-100 border bg-transparent'
           }`}
         >
           {index + 1}
@@ -38,7 +38,7 @@ export default function Pagination({
       <button
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="border-custom-gray-100 flex size-10 cursor-pointer items-center justify-center rounded-full border bg-transparent disabled:cursor-not-allowed"
+        className="border-custom-gray-100 hover:bg-custom-gray-100 flex size-10 cursor-pointer items-center justify-center rounded-full border bg-transparent disabled:cursor-not-allowed disabled:bg-transparent"
       >
         {'>'}
       </button>
