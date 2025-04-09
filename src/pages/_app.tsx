@@ -13,6 +13,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { getCookie } from 'cookies-next'
 import { useEffect, useState } from 'react'
+import Router from 'next/router'
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -20,32 +21,51 @@ export default function App({ Component, pageProps }: AppProps) {
   const hideLayout = noLayoutPages.includes(router.pathname)
 
   const { isLoggedIn, login, setUser } = useAuthStore()
-  const [loading, setLoading] = useState(true)
+  const [authLoading, setAuthLoading] = useState(true)
+  const [pageLoading, setPageLoading] = useState(false)
 
+  // ✅ 페이지 이동 로딩 이벤트 처리
+  useEffect(() => {
+    const handleStart = () => setPageLoading(true)
+    const handleComplete = () => setPageLoading(false)
+
+    Router.events.on('routeChangeStart', handleStart)
+    Router.events.on('routeChangeComplete', handleComplete)
+    Router.events.on('routeChangeError', handleComplete)
+
+    return () => {
+      Router.events.off('routeChangeStart', handleStart)
+      Router.events.off('routeChangeComplete', handleComplete)
+      Router.events.off('routeChangeError', handleComplete)
+    }
+  }, [])
+
+  // ✅ 인증 상태 초기화
   useEffect(() => {
     const initAuth = async () => {
       const accessToken = getCookie('accessToken')
       if (!accessToken) {
-        setLoading(false)
+        setAuthLoading(false)
         return
       }
 
       try {
         const user = await getUserData(accessToken as string)
-        setUser(user) // 유저 정보 설정
-        login(accessToken as string) // 로그인 처리
+        setUser(user)
+        login(accessToken as string)
       } catch (err) {
         console.error('유저 데이터 가져오기 실패:', err)
       } finally {
-        setLoading(false)
+        setAuthLoading(false)
       }
     }
 
     initAuth()
   }, [setUser, login])
 
+  // ✅ 인증 상태에 따른 라우팅 처리
   useEffect(() => {
-    if (loading) return
+    if (authLoading) return
 
     if (router.pathname === '/') return
 
@@ -55,9 +75,9 @@ export default function App({ Component, pageProps }: AppProps) {
     } else if (isLoggedIn && ['/login', '/signup'].includes(router.pathname)) {
       router.push('/home')
     }
-  }, [hideLayout, isLoggedIn, loading, router])
+  }, [hideLayout, isLoggedIn, authLoading, router])
 
-  if (loading) return <Loading />
+  if (authLoading || pageLoading) return <Loading />
 
   return (
     <>
