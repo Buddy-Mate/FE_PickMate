@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from '../Button'
 import { useRouter } from 'next/navigation'
 import { deleteCookie } from 'cookies-next'
@@ -11,6 +11,7 @@ import { notify } from '../Toast'
 import { updateUserData } from '@/libs/apis/auth'
 
 type ProfileCardProps = {
+  id: number
   nickname: string
   email: string
   bio?: string
@@ -18,6 +19,7 @@ type ProfileCardProps = {
 }
 
 export default function ProfileCard({
+  id,
   nickname,
   email,
   bio,
@@ -27,9 +29,13 @@ export default function ProfileCard({
 
   const [nicknameInput, setNicknameInput] = useState<string>(nickname)
   const [bioInput, setBioInput] = useState<string>(bio || '')
+
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null)
 
   const router = useRouter()
+
+  const { setUser, logout } = useAuthStore()
 
   // 취소 버튼
   const handleCancel = () => {
@@ -42,24 +48,38 @@ export default function ProfileCard({
   // 로그아웃
   const handleLogOut = () => {
     deleteCookie('accessToken')
-    useAuthStore.getState().logout()
+    logout()
     router.push('/login')
   }
 
-  // TODO: API 연결
+  // TODO: 이미지 API 연결
   const handleSave = async () => {
     try {
       // 변경사항이 있는 경우에만 요청
       const isNicknameChanged = nicknameInput !== nickname
       const isBioChanged = bioInput !== (bio ?? '')
 
-      if (!isNicknameChanged && !isBioChanged) {
+      if (!isNicknameChanged && !isBioChanged && !selectedImage) {
         notify('info', '변경된 내용이 없습니다.')
         setIsEditing(false)
         return
       }
 
+      if (nicknameInput.length > 10) {
+        notify('error', '닉네임은 10글자 이하이어야 합니다.')
+        return
+      }
+
       await updateUserData(nicknameInput, bioInput || '')
+
+      // 사용자 정보 업데이트
+      setUser({
+        id,
+        nickname: nicknameInput,
+        email,
+        bio: bioInput,
+        profileImage: imagePreviewUrl || profileImage,
+      })
 
       notify('success', '프로필 수정 성공!')
       setIsEditing(false)
@@ -76,6 +96,14 @@ export default function ProfileCard({
     }
   }
 
+  useEffect(() => {
+    if (selectedImage) {
+      const newImagePreviewUrl = URL.createObjectURL(selectedImage)
+      setImagePreviewUrl(newImagePreviewUrl)
+      return () => URL.revokeObjectURL(newImagePreviewUrl)
+    }
+  }, [selectedImage])
+
   return (
     <div className="border-custom-gray-200 mb-10 flex flex-col items-center justify-center gap-2 rounded-lg border-2 p-4 md:flex-row md:gap-10 md:p-8">
       <div className="flex justify-center md:w-1/3">
@@ -83,19 +111,15 @@ export default function ProfileCard({
           {isEditing ? (
             <ProfileImageUploader
               profileImage={
-                selectedImage
-                  ? URL.createObjectURL(selectedImage) // 사용자가 새 이미지를 선택한 경우 미리보기
-                  : profileImage || profileEdit // 기존 이미지 또는 기본 이미지
+                imagePreviewUrl ||
+                (typeof profileImage === 'string' ? profileImage : undefined) ||
+                profileEdit
               }
               onImageChange={setSelectedImage}
             />
           ) : (
             <Image
-              src={
-                selectedImage
-                  ? URL.createObjectURL(selectedImage)
-                  : profileImage || profile
-              }
+              src={imagePreviewUrl || profileImage || profile}
               alt="프로필 이미지"
               className="size-30 rounded-full object-cover transition-all md:size-40"
               width={120}
