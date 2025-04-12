@@ -8,6 +8,7 @@ import Image, { StaticImageData } from 'next/image'
 import profile from '@/assets/icons/profile.png'
 import profileEdit from '@/assets/icons/profileEdit.png'
 import { notify } from '../Toast'
+import { updateUserData } from '@/libs/apis/auth'
 
 type ProfileCardProps = {
   nickname: string
@@ -24,8 +25,8 @@ export default function ProfileCard({
 }: ProfileCardProps) {
   const [isEditing, setIsEditing] = useState(false)
 
-  const [nicknameInput, setNicknameInput] = useState(nickname)
-  const [bioInput, setBioInput] = useState(bio)
+  const [nicknameInput, setNicknameInput] = useState<string>(nickname)
+  const [bioInput, setBioInput] = useState<string>(bio || '')
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
 
   const router = useRouter()
@@ -33,7 +34,7 @@ export default function ProfileCard({
   // 취소 버튼
   const handleCancel = () => {
     setNicknameInput(nickname)
-    setBioInput(bio)
+    setBioInput(bio || '')
     setSelectedImage(null)
     setIsEditing(false)
   }
@@ -46,12 +47,33 @@ export default function ProfileCard({
   }
 
   // TODO: API 연결
-  const handleSave = () => {
-    notify('success', '프로필 변경 성공!')
-    console.log('닉네임:', nicknameInput)
-    console.log('한 줄 소개:', bioInput)
-    console.log('프로필 이미지:', selectedImage)
-    setIsEditing(false)
+  const handleSave = async () => {
+    try {
+      // 변경사항이 있는 경우에만 요청
+      const isNicknameChanged = nicknameInput !== nickname
+      const isBioChanged = bioInput !== (bio ?? '')
+
+      if (!isNicknameChanged && !isBioChanged) {
+        notify('info', '변경된 내용이 없습니다.')
+        setIsEditing(false)
+        return
+      }
+
+      await updateUserData(nicknameInput, bioInput || '')
+
+      notify('success', '프로필 수정 성공!')
+      setIsEditing(false)
+    } catch (error) {
+      // 403 오류 처리
+      if (error instanceof Error) {
+        if (error.message === '이미 사용 중인 닉네임입니다.') {
+          notify('error', '이미 사용 중인 닉네임입니다.')
+        } else {
+          notify('error', '프로필 수정에 실패했습니다.')
+        }
+        console.error(error)
+      }
+    }
   }
 
   return (
