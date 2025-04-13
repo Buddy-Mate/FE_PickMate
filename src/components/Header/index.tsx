@@ -3,9 +3,11 @@ import logo from '@/assets/imgs/logo.png'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import profile from '@/assets/icons/profile.png'
+import { useAuthStore } from '@/store/authStore'
 
 export default function Header() {
   const router = useRouter()
+  const { user } = useAuthStore()
 
   const isActive = (path: string) => router.pathname === path
 
@@ -31,9 +33,9 @@ export default function Header() {
             </Link>
           </nav>
         </div>
-        <Link href="/my">
+        <Link href="/my" className="rounded-full border-2">
           <Image
-            src={profile}
+            src={user?.profileImage || profile}
             alt="마이페이지 로고"
             width={40}
             height={40}

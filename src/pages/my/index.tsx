@@ -11,7 +11,13 @@ export default function My() {
   return (
     <div className="mx-auto w-full max-w-[1200px] px-10 py-10">
       <h1 className="my-4 text-3xl font-bold">{user?.nickname}님의 정보</h1>
-      <ProfileCard nickname={user.nickname} email={user.email} bio={user.bio} />
+      <ProfileCard
+        id={user.id}
+        nickname={user.nickname}
+        email={user.email}
+        bio={user.bio}
+        profileImage={user.profileImage}
+      />
 
       <MyRegisteredSection />
       <MyAppliedSection />

@@ -1,5 +1,4 @@
-import { Project } from './project'
-import { Study } from './study'
+import { StaticImageData } from 'next/image'
 
 export type LoginResponse = {
   email: string
@@ -17,8 +16,5 @@ export type User = {
   email: string
   nickname: string
   bio?: string
-  writtenProjects: Project[]
-  writtenStudies: Study[]
-  appliedProjects: Project[]
-  appliedStudies: Study[]
+  profileImage?: string | StaticImageData
 }
