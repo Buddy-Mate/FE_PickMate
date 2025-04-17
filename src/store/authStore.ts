@@ -1,5 +1,5 @@
 import { User } from '@/types/auth'
-import { getCookie } from 'cookies-next'
+import { deleteCookie, getCookie } from 'cookies-next'
 import { create } from 'zustand'
 
 interface AuthStore {
@@ -20,6 +20,9 @@ export const useAuthStore = create<AuthStore>((set) => {
     user: null,
     login: (token: string) => set({ isLoggedIn: true, accessToken: token }),
     setUser: (user: User) => set({ user }),
-    logout: () => set({ isLoggedIn: false, accessToken: null }),
+    logout: () => {
+      deleteCookie('accessToken')
+      set({ isLoggedIn: false, accessToken: null, user: null })
+    },
   }
 })

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import Button from '../Button'
 import { useRouter } from 'next/navigation'
-import { deleteCookie } from 'cookies-next'
 import { useAuthStore } from '@/store/authStore'
 import ProfileImageUploader from './ProfileImageUploader'
 import Image, { StaticImageData } from 'next/image'
@@ -47,7 +46,7 @@ export default function ProfileCard({
 
   // 로그아웃
   const handleLogOut = () => {
-    deleteCookie('accessToken')
+    notify('info', '로그인이 필요합니다!')
     logout()
     router.push('/login')
   }
