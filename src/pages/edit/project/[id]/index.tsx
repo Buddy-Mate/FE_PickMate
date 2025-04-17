@@ -114,7 +114,9 @@ export default function EditProject({ project }: EditProjectProps) {
     try {
       await updateProject(Number(id), data, accessToken as string)
       notify('success', '프로젝트 수정 성공!')
-      router.push(`/project/${id}`)
+      setTimeout(() => {
+        router.push(`/project/${id}`)
+      }, 1000)
     } catch (error) {
       notify('error', '프로젝트 수정에 실패했습니다. 다시 시도해주세요.')
       console.error('프로젝트 수정 에러:', error)
