@@ -105,9 +105,9 @@ export default function App({ Component, pageProps }: AppProps) {
         {!hideLayout && <Header />}
         <main className="mt-20 flex-1">
           <Component {...pageProps} />
-          <Toast />
         </main>
         {!hideLayout && <Footer />}
+        <Toast />
       </div>
     </>
   )
