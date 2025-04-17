@@ -47,7 +47,9 @@ export default function AddStudy() {
     try {
       await createStudy(data)
       notify('success', '스터디 등록 성공!')
-      router.push('/study')
+      setTimeout(() => {
+        router.push('/study')
+      }, 1000)
     } catch (error) {
       notify('error', '스터디 등록에 실패했습니다. 다시 시도해주세요.')
       console.error('스터디 등록 에러:', error)

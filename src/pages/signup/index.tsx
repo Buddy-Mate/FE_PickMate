@@ -34,7 +34,9 @@ export default function Signup() {
       await signup({ email, nickname, password })
 
       notify('success', '회원가입 성공!')
-      router.push('/login')
+      setTimeout(() => {
+        router.push('/login')
+      }, 1000)
     } catch (error) {
       notify('error', '회원가입에 실패했습니다.')
       console.error('회원가입 에러:', error)

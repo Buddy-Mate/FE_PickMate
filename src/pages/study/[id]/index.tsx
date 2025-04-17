@@ -89,7 +89,9 @@ export default function StudyDetail({ study }: StudyDetailProps) {
       await applyStudy(study.id, message)
       closeModal()
       notify('success', '스터디 신청 완료!')
-      router.push('/my')
+      setTimeout(() => {
+        router.push('/my')
+      }, 1000)
     } catch (error) {
       console.error('스터디 신청 실패:', error)
     }
@@ -103,7 +105,9 @@ export default function StudyDetail({ study }: StudyDetailProps) {
     try {
       await deleteStudy(study.id)
       notify('success', '스터디 삭제 성공!')
-      router.push('/study')
+      setTimeout(() => {
+        router.push('/study')
+      }, 1000)
     } catch (error) {
       notify('error', '스터디 삭제에 실패했습니다.')
       console.error('스터디 삭제 오류:', error)

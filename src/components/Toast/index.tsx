@@ -18,12 +18,12 @@ export const notify = (type: 'success' | 'error' | 'info', message: string) => {
     info: '⚠️',
   }
 
+  console.log('notify 호출', type, message)
   const toastClass = {
     success: 'toast-success',
     error: 'toast-error',
     info: 'toast-info',
   }
-
   toast(`${icons[type]} ${message}`, {
     ...option,
     className: toastClass[type],
@@ -31,5 +31,5 @@ export const notify = (type: 'success' | 'error' | 'info', message: string) => {
 }
 
 export default function Toast() {
-  return <ToastContainer {...option} />
+  return <ToastContainer {...option} style={{ zIndex: 9999 }} />
 }

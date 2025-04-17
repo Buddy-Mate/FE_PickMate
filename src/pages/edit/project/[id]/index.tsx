@@ -15,7 +15,6 @@ import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useRouter } from 'next/router'
 import { getProjectById, updateProject } from '@/libs/apis/project'
-import Loading from '@/components/Loading'
 import { GetServerSidePropsContext } from 'next'
 import { getCookie } from 'cookies-next'
 import { Project } from '@/types/project'
@@ -77,8 +76,6 @@ export default function EditProject({ project }: EditProjectProps) {
 
   const [description, setDescription] = useState(project.description || '')
 
-  const [isLoading, setIsLoading] = useState(false)
-
   const handleTagInput = (e: ChangeEvent<HTMLInputElement>) => {
     setStackTag(e.target.value)
   }
@@ -113,22 +110,20 @@ export default function EditProject({ project }: EditProjectProps) {
   }, [selectedDate, setValue])
 
   const onSubmit = async (data: FormData) => {
-    setIsLoading(true)
     const accessToken = await getCookie('accessToken')
     try {
       await updateProject(Number(id), data, accessToken as string)
       notify('success', '프로젝트 수정 성공!')
-      router.push(`/project/${id}`)
+      setTimeout(() => {
+        router.push(`/project/${id}`)
+      }, 1000)
     } catch (error) {
       notify('error', '프로젝트 수정에 실패했습니다. 다시 시도해주세요.')
       console.error('프로젝트 수정 에러:', error)
-    } finally {
-      setIsLoading(false)
     }
   }
 
   if (!project) return
-  if (isLoading) return <Loading />
 
   return (
     <div className="mx-auto w-full max-w-[1200px] px-10 py-10">
@@ -230,8 +225,8 @@ export default function EditProject({ project }: EditProjectProps) {
           >
             취소하기
           </Button>
-          <Button type="primary" className="max-w-30" disabled={isLoading}>
-            {isLoading ? '수정중...' : '수정하기'}
+          <Button type="primary" className="max-w-30">
+            수정하기
           </Button>
         </div>
       </form>

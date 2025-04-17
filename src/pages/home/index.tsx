@@ -33,10 +33,9 @@ export async function getServerSideProps() {
 
 type HomeProps = {
   projects: Project[]
-  user: User
 }
 
-export default function HomePage({ projects, user }: HomeProps) {
+export default function HomePage({ projects }: HomeProps) {
   const [sortedProjects, setSortedProjects] = useState<Project[]>(projects)
   const [searchResults, setSearchResults] = useState<Project[] | null>(null)
   const [sortOption, setSortOption] = useState('최신순')
@@ -44,14 +43,6 @@ export default function HomePage({ projects, user }: HomeProps) {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6
   const totalPages = Math.ceil(projects.length / itemsPerPage)
-
-  const { setUser } = useAuthStore()
-
-  useEffect(() => {
-    if (user) {
-      setUser(user)
-    }
-  }, [user, setUser])
 
   const handleSortChange = (option: string) => {
     setSortOption(option)

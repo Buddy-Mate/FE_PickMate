@@ -81,7 +81,9 @@ export default function EditStudy({ study }: EditStudyProps) {
     try {
       await updateStudy(Number(id), data, accessToken as string)
       notify('success', '스터디 수정 성공!')
-      router.push(`/study/${id}`)
+      setTimeout(() => {
+        router.push(`/study/${id}`)
+      }, 1000)
     } catch (error) {
       notify('error', '스터디 수정에 실패했습니다. 다시 시도해주세요.')
       console.error('스터디 수정 에러:', error)

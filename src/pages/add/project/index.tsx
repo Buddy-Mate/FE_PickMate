@@ -83,7 +83,9 @@ export default function AddProject() {
     try {
       await createProject(data)
       notify('success', '프로젝트 등록 성공!')
-      router.push('/home')
+      setTimeout(() => {
+        router.push('/home')
+      }, 1000)
     } catch (error) {
       notify('error', '프로젝트 등록에 실패했습니다. 다시 시도해주세요.')
       console.error('프로젝트 등록 에러:', error)

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import Button from '../Button'
 import { useRouter } from 'next/navigation'
-import { deleteCookie } from 'cookies-next'
 import { useAuthStore } from '@/store/authStore'
 import ProfileImageUploader from './ProfileImageUploader'
 import Image, { StaticImageData } from 'next/image'
@@ -47,9 +46,10 @@ export default function ProfileCard({
 
   // 로그아웃
   const handleLogOut = () => {
-    deleteCookie('accessToken')
-    logout()
-    router.push('/login')
+    setTimeout(() => {
+      logout()
+      router.push('/login')
+    }, 300)
   }
 
   // TODO: 이미지 API 연결
