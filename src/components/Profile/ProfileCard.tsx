@@ -46,9 +46,10 @@ export default function ProfileCard({
 
   // 로그아웃
   const handleLogOut = () => {
-    notify('info', '로그인이 필요합니다!')
-    logout()
-    router.push('/login')
+    setTimeout(() => {
+      logout()
+      router.push('/login')
+    }, 300)
   }
 
   // TODO: 이미지 API 연결
