@@ -11,6 +11,11 @@ export default function Header() {
 
   const isActive = (path: string) => router.pathname === path
 
+  const getProfileImage = () => {
+    const storedImage = localStorage.getItem('profileImage')
+    return storedImage ? storedImage : user?.profileImage || profile
+  }
+
   return (
     <header className="bg-custom-black border-custom-gray-300 fixed top-0 left-0 z-50 w-full border-b">
       <div className="mx-auto flex w-full max-w-[1200px] items-center justify-between gap-4 px-6 text-white md:gap-10">
@@ -35,11 +40,11 @@ export default function Header() {
         </div>
         <Link href="/my" className="rounded-full border-2">
           <Image
-            src={user?.profileImage || profile}
+            src={getProfileImage()}
             alt="마이페이지 로고"
             width={40}
             height={40}
-            className="rounded-full"
+            className="size-10 rounded-full"
           />
         </Link>
       </div>

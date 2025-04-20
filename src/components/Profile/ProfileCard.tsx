@@ -52,7 +52,6 @@ export default function ProfileCard({
     }, 300)
   }
 
-  // TODO: 이미지 API 연결
   const handleSave = async () => {
     try {
       // 변경사항이 있는 경우에만 요청
@@ -68,6 +67,17 @@ export default function ProfileCard({
       if (nicknameInput.length > 10) {
         notify('error', '닉네임은 10글자 이하이어야 합니다.')
         return
+      }
+
+      // 이미지가 선택되었으면 로컬스토리지에 저장
+      if (selectedImage) {
+        const reader = new FileReader()
+        reader.onloadend = () => {
+          const base64Image = reader.result as string
+          localStorage.setItem('profileImage', base64Image)
+          setImagePreviewUrl(base64Image)
+        }
+        reader.readAsDataURL(selectedImage) // base64로 변환
       }
 
       await updateUserData(nicknameInput, bioInput || '')
@@ -97,6 +107,12 @@ export default function ProfileCard({
   }
 
   useEffect(() => {
+    // 로컬스토리지에 저장된 이미지 불러오기
+    const storedImage = localStorage.getItem('profileImage')
+    if (storedImage) {
+      setImagePreviewUrl(storedImage)
+    }
+
     if (selectedImage) {
       const newImagePreviewUrl = URL.createObjectURL(selectedImage)
       setImagePreviewUrl(newImagePreviewUrl)
