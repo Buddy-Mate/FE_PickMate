@@ -15,6 +15,6 @@ export type User = {
   id: number
   email: string
   nickname: string
-  bio?: string
+  introduction?: string
   profileImage?: string | StaticImageData
 }

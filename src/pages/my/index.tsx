@@ -15,7 +15,7 @@ export default function My() {
         id={user.id}
         nickname={user.nickname}
         email={user.email}
-        bio={user.bio}
+        introduction={user.introduction}
         profileImage={user.profileImage}
       />
 

@@ -13,7 +13,7 @@ type ProfileCardProps = {
   id: number
   nickname: string
   email: string
-  bio?: string
+  introduction?: string
   profileImage?: string | StaticImageData
 }
 
@@ -21,13 +21,15 @@ export default function ProfileCard({
   id,
   nickname,
   email,
-  bio,
+  introduction,
   profileImage,
 }: ProfileCardProps) {
   const [isEditing, setIsEditing] = useState(false)
 
   const [nicknameInput, setNicknameInput] = useState<string>(nickname)
-  const [bioInput, setBioInput] = useState<string>(bio || '')
+  const [introductionInput, setIntroductionInput] = useState<string>(
+    introduction || '',
+  )
 
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null)
@@ -39,7 +41,7 @@ export default function ProfileCard({
   // 취소 버튼
   const handleCancel = () => {
     setNicknameInput(nickname)
-    setBioInput(bio || '')
+    setIntroductionInput(introduction || '')
     setSelectedImage(null)
     setIsEditing(false)
   }
@@ -57,9 +59,9 @@ export default function ProfileCard({
     try {
       // 변경사항이 있는 경우에만 요청
       const isNicknameChanged = nicknameInput !== nickname
-      const isBioChanged = bioInput !== (bio ?? '')
+      const isIntroductionChanged = introductionInput !== (introduction ?? '')
 
-      if (!isNicknameChanged && !isBioChanged && !selectedImage) {
+      if (!isNicknameChanged && !isIntroductionChanged && !selectedImage) {
         notify('info', '변경된 내용이 없습니다.')
         setIsEditing(false)
         return
@@ -70,14 +72,14 @@ export default function ProfileCard({
         return
       }
 
-      await updateUserData(nicknameInput, bioInput || '')
+      await updateUserData(nicknameInput, introductionInput || '')
 
       // 사용자 정보 업데이트
       setUser({
         id,
         nickname: nicknameInput,
         email,
-        bio: bioInput,
+        introduction: introductionInput,
         profileImage: imagePreviewUrl || profileImage,
       })
 
@@ -143,8 +145,8 @@ export default function ProfileCard({
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold">✍️ 한 줄 소개</label>
               <input
-                value={bioInput}
-                onChange={(e) => setBioInput(e.target.value)}
+                value={introductionInput}
+                onChange={(e) => setIntroductionInput(e.target.value)}
                 placeholder="한 줄 소개를 입력하세요"
                 className="text-custom-white focus:border-custom-white border-custom-gray-300 rounded-lg border-2 bg-transparent px-2 py-1 outline-none"
               />
@@ -167,7 +169,8 @@ export default function ProfileCard({
             <h3 className="text-xl font-semibold">{nicknameInput}</h3>
             <p className="text-gray-600">{email}</p>
             <p className="mt-2 text-gray-500">
-              ✍️ {bioInput ? bioInput : '한 줄 소개가 없습니다.'}
+              ✍️{' '}
+              {introductionInput ? introductionInput : '한 줄 소개가 없습니다.'}
             </p>
             <div className="flex gap-4">
               <Button type="secondary" onClick={() => setIsEditing(true)}>
