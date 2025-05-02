@@ -57,11 +57,11 @@ export default function ProfileCard({
   // TODO: 이미지 API 연결
   const handleSave = async () => {
     try {
-      // 변경사항이 있는 경우에만 요청
       const isNicknameChanged = nicknameInput !== nickname
       const isIntroductionChanged = introductionInput !== (introduction ?? '')
+      const isImageChanged = selectedImage !== null
 
-      if (!isNicknameChanged && !isIntroductionChanged && !selectedImage) {
+      if (!isNicknameChanged && !isIntroductionChanged && !isImageChanged) {
         notify('info', '변경된 내용이 없습니다.')
         setIsEditing(false)
         return
@@ -72,7 +72,27 @@ export default function ProfileCard({
         return
       }
 
-      await updateUserData(nicknameInput, introductionInput || '')
+      const formData = new FormData()
+      const userData = {
+        nickname: nicknameInput,
+        introduction: introductionInput,
+      }
+      formData.append(
+        'data',
+        new Blob([JSON.stringify(userData)], { type: 'application/json' }),
+      )
+
+      if (selectedImage) {
+        formData.append('image', selectedImage)
+      }
+
+      console.log('📦 FormData 전체 내용:')
+      formData.forEach((value, key) => {
+        console.log(`${key}:`, value)
+      })
+
+      const response = await updateUserData(formData)
+      console.log('서버 응답:', response)
 
       // 사용자 정보 업데이트
       setUser({

@@ -18,7 +18,6 @@ export const notify = (type: 'success' | 'error' | 'info', message: string) => {
     info: '⚠️',
   }
 
-  console.log('notify 호출', type, message)
   const toastClass = {
     success: 'toast-success',
     error: 'toast-error',
