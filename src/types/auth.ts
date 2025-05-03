@@ -1,5 +1,3 @@
-import { StaticImageData } from 'next/image'
-
 export type LoginResponse = {
   email: string
   password: string
@@ -16,5 +14,5 @@ export type User = {
   email: string
   nickname: string
   introduction?: string
-  profileImage?: string | StaticImageData
+  profileImage?: string | null
 }
