@@ -35,7 +35,7 @@ export default function Header() {
         </div>
         <Link href="/my" className="rounded-full border-2">
           <Image
-            src={user?.profileImage || profile}
+            src={user?.profileImageUrl || profile}
             alt="마이페이지 로고"
             width={40}
             height={40}

@@ -27,7 +27,7 @@ export default function ProfileCard() {
     if (user) {
       setNicknameInput(user.nickname)
       setIntroductionInput(user.introduction || '')
-      setImagePreviewUrl(user.profileImage || null)
+      setImagePreviewUrl(user.profileImageUrl || null)
     }
   }, [user])
 
@@ -111,12 +111,12 @@ export default function ProfileCard() {
           <div className="rounded-full border-6 md:border-8">
             {isEditing ? (
               <ProfileImageUploader
-                profileImage={imagePreviewUrl || profileEdit}
+                profileImageUrl={imagePreviewUrl || profileEdit}
                 onImageChange={setSelectedImage}
               />
             ) : (
               <Image
-                src={user?.profileImage || profile}
+                src={user?.profileImageUrl || profile}
                 alt="프로필 이미지"
                 className="size-30 rounded-full object-cover transition-all md:size-40"
                 width={120}

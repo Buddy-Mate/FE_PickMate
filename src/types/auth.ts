@@ -14,5 +14,5 @@ export type User = {
   email: string
   nickname: string
   introduction?: string
-  profileImage?: string | null
+  profileImageUrl?: string | null
 }
