@@ -10,7 +10,7 @@ type StudyCardProps = {
 }
 
 export default function ProjectCard({ study }: StudyCardProps) {
-  const { id, title, authorNickname, likes, views } = study
+  const { id, title, authorNickname, authorProfile, likes, views } = study
 
   return (
     <div className="bg-custom-gray-300 border-custom-gray-100 flex h-50 flex-col justify-between rounded-lg border p-4 shadow-md transition-all hover:scale-105">
@@ -23,11 +23,11 @@ export default function ProjectCard({ study }: StudyCardProps) {
         {/* 프로필 */}
         <div className="flex items-center gap-2">
           <Image
-            src={profile}
+            src={authorProfile || profile}
             alt={authorNickname}
             width={40}
             height={40}
-            className="rounded-full"
+            className="size-12 rounded-full object-cover object-center"
           />
           <p className="text-gray-500">{authorNickname}</p>
         </div>

@@ -10,6 +10,7 @@ export type Study = {
   description: string
   deadline: string
   authorNickname: string
+  authorProfile: string
   likes: number
   views: number
   createdAt: string

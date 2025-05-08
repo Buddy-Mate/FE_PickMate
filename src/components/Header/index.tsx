@@ -39,7 +39,7 @@ export default function Header() {
             alt="마이페이지 로고"
             width={40}
             height={40}
-            className="rounded-full"
+            className="size-12 rounded-full object-cover object-center"
           />
         </Link>
       </div>
