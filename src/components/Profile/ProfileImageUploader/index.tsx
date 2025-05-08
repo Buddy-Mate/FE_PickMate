@@ -3,15 +3,15 @@ import Image, { StaticImageData } from 'next/image'
 import profilePlaceholder from '@/assets/icons/profile.png'
 
 type ProfileImageUploaderProps = {
-  profileImage: string | StaticImageData
+  profileImageUrl: string | StaticImageData
   onImageChange: (file: File | null) => void
 }
 
 export default function ProfileImageUploader({
-  profileImage,
+  profileImageUrl,
   onImageChange,
 }: ProfileImageUploaderProps) {
-  const [preview, setPreview] = useState(profileImage || profilePlaceholder)
+  const [preview, setPreview] = useState(profileImageUrl || profilePlaceholder)
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]

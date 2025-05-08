@@ -12,10 +12,7 @@ export type Project = {
   techStack: string[]
   deadline: string
   authorNickname: string
-  // author: {
-  //   userId: number
-  //   userNickname: string
-  // }
+  authorProfile: string
   likes: number
   views: number
   createdAt: string
